@@ -46,13 +46,13 @@ interface SearchUser {
   realm: string;
 }
 
-export default function MessagesContent() {
+export default function MensajesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeChat, setActiveChat] = useState<string | null>(
-    searchParams.get("with")
+    searchParams.get("con")
   );
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -75,10 +75,10 @@ export default function MessagesContent() {
   }, [router]);
 
   const fetchConversations = useCallback(async () => {
-    const res = await fetch("/api/messages/conversations");
+    const res = await fetch("/api/mensajes/conversaciones");
     if (res.ok) {
       const data = await res.json();
-      setConversations(data.conversations);
+      setConversations(data.conversaciones);
     }
   }, []);
 
@@ -91,10 +91,10 @@ export default function MessagesContent() {
 
   const fetchMessages = useCallback(async () => {
     if (!activeChat) return;
-    const res = await fetch(`/api/messages?with=${activeChat}`);
+    const res = await fetch(`/api/mensajes?con=${activeChat}`);
     if (res.ok) {
       const data = await res.json();
-      setMessages(data.messages);
+      setMessages(data.mensajes);
     }
   }, [activeChat]);
 
@@ -115,7 +115,7 @@ export default function MessagesContent() {
 
     setSending(true);
     try {
-      const res = await fetch("/api/messages", {
+      const res = await fetch("/api/mensajes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ receiverId: activeChat, content: newMessage }),
@@ -136,18 +136,18 @@ export default function MessagesContent() {
       setSearchResults([]);
       return;
     }
-    const res = await fetch(`/api/users?search=${encodeURIComponent(query)}`);
+    const res = await fetch(`/api/usuarios?buscar=${encodeURIComponent(query)}`);
     if (res.ok) {
       const data = await res.json();
-      setSearchResults(data.users);
+      setSearchResults(data.usuarios);
     }
   };
 
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[var(--color-text-muted)] font-[family-name:var(--font-family-gothic)]">
-          Opening the castle gates...
+        <p className="text-[var(--color-text-muted)] pixel-title text-[10px]">
+          Abriendo las puertas del castillo...
         </p>
       </div>
     );
@@ -157,21 +157,21 @@ export default function MessagesContent() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 flex max-w-5xl mx-auto w-full">
-        {/* Conversations sidebar */}
-        <div className="w-80 border-r border-[var(--color-border-dark)] flex flex-col">
-          <div className="p-4 border-b border-[var(--color-border-dark)]">
-            <h2 className="font-[family-name:var(--font-family-gothic)] text-sm font-bold text-[var(--color-accent-gold)] mb-2">
-              💀 Dark Messages
+        {/* Barra lateral de conversaciones */}
+        <div className="w-80 border-r-3 border-[var(--color-border-dark)] flex flex-col bg-[var(--color-bg-card)]">
+          <div className="p-4 border-b-3 border-[var(--color-border-dark)]">
+            <h2 className="pixel-title text-[var(--color-accent-gold)] text-[9px] mb-3">
+              💀 Mensajes Oscuros
             </h2>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search souls..."
+              placeholder="Buscar almas..."
               className="input-fantasy text-sm py-2"
             />
             {searchResults.length > 0 && (
-              <div className="mt-2 castle-card rounded p-2 max-h-40 overflow-y-auto scrollbar-dark">
+              <div className="mt-2 castle-card p-2 max-h-40 overflow-y-auto scrollbar-dark">
                 {searchResults.map((u) => (
                   <button
                     key={u._id}
@@ -180,7 +180,7 @@ export default function MessagesContent() {
                       setSearchQuery("");
                       setSearchResults([]);
                     }}
-                    className="w-full text-left p-2 rounded hover:bg-[var(--color-bg-hover)] transition-colors"
+                    className="w-full text-left p-2 hover:bg-[var(--color-bg-hover)] transition-colors"
                   >
                     <span className="text-sm text-[var(--color-text-primary)]">
                       {u.displayName}
@@ -196,25 +196,25 @@ export default function MessagesContent() {
           <div className="flex-1 overflow-y-auto scrollbar-dark">
             {conversations.length === 0 ? (
               <p className="text-[var(--color-text-muted)] text-sm p-4 text-center">
-                No whispers yet. Search for a soul to begin.
+                Sin susurros aun. Busca un alma para comenzar.
               </p>
             ) : (
               conversations.map((conv) => (
                 <button
                   key={conv._id}
                   onClick={() => setActiveChat(conv._id)}
-                  className={`w-full text-left p-4 border-b border-[var(--color-border-dark)] transition-colors ${
+                  className={`w-full text-left p-4 border-b-2 border-[var(--color-border-dark)] transition-colors ${
                     activeChat === conv._id
                       ? "bg-[var(--color-bg-hover)]"
                       : "hover:bg-[var(--color-bg-secondary)]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-[family-name:var(--font-family-gothic)] text-sm text-[var(--color-accent-gold)]">
+                    <span className="pixel-title text-[var(--color-accent-gold)] text-[8px]">
                       {conv.user.displayName}
                     </span>
                     {conv.unreadCount > 0 && (
-                      <span className="bg-[var(--color-accent-purple)] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      <span className="bg-[var(--color-accent-purple)] text-white text-xs w-5 h-5 flex items-center justify-center border border-black">
                         {conv.unreadCount}
                       </span>
                     )}
@@ -228,7 +228,7 @@ export default function MessagesContent() {
           </div>
         </div>
 
-        {/* Chat area */}
+        {/* Area de chat */}
         <div className="flex-1 flex flex-col">
           {activeChat ? (
             <>
@@ -236,7 +236,7 @@ export default function MessagesContent() {
                 {messages.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-[var(--color-text-muted)]">
-                      🏰 Begin your dark conversation...
+                      🏰 Comienza tu conversacion oscura...
                     </p>
                   </div>
                 ) : (
@@ -250,9 +250,9 @@ export default function MessagesContent() {
                         }`}
                       >
                         <div
-                          className={`max-w-[70%] rounded-lg p-3 ${
+                          className={`max-w-[70%] p-3 ${
                             isOwn
-                              ? "bg-[var(--color-accent-purple)] bg-opacity-30 border border-[var(--color-accent-purple)]"
+                              ? "bg-[var(--color-accent-purple)] border-2 border-[var(--color-border-glow)]"
                               : "castle-card"
                           }`}
                         >
@@ -274,13 +274,13 @@ export default function MessagesContent() {
               </div>
               <form
                 onSubmit={handleSend}
-                className="p-4 border-t border-[var(--color-border-dark)] flex gap-2"
+                className="p-4 border-t-3 border-[var(--color-border-dark)] flex gap-2"
               >
                 <input
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Whisper into the darkness..."
+                  placeholder="Susurra en la oscuridad..."
                   className="input-fantasy flex-1"
                   maxLength={1000}
                 />
@@ -289,7 +289,7 @@ export default function MessagesContent() {
                   disabled={!newMessage.trim() || sending}
                   className="btn-fantasy"
                 >
-                  {sending ? "..." : "Send"}
+                  {sending ? "..." : "Enviar"}
                 </button>
               </form>
             </>
@@ -297,8 +297,11 @@ export default function MessagesContent() {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <p className="text-4xl mb-4">💀</p>
-                <p className="text-[var(--color-text-muted)] font-[family-name:var(--font-family-gothic)]">
-                  Select a soul to begin whispering
+                <p className="text-[var(--color-text-muted)] pixel-title text-[9px]">
+                  Selecciona una conversacion
+                </p>
+                <p className="text-[var(--color-text-muted)] text-sm mt-2">
+                  o busca un alma para susurrar
                 </p>
               </div>
             </div>

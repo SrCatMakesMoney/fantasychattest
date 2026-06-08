@@ -7,19 +7,19 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
     const { postId } = await request.json();
 
     if (!postId) {
-      return Response.json({ error: "Post ID is required" }, { status: 400 });
+      return Response.json({ error: "ID de publicacion requerido" }, { status: 400 });
     }
 
     const post = await Post.findById(postId);
     if (!post) {
-      return Response.json({ error: "Post not found" }, { status: 404 });
+      return Response.json({ error: "Publicacion no encontrada" }, { status: 404 });
     }
 
     const userIdStr = session.userId;
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     await post.save();
     return Response.json({ likes: post.likes.length, liked: !alreadyLiked });
   } catch (error) {
-    console.error("Like error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error en megusta:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }

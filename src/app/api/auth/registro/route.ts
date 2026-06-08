@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     if (!username || !password || !displayName) {
       return Response.json(
-        { error: "All fields are required" },
+        { error: "Todos los campos son requeridos" },
         { status: 400 }
       );
     }
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const existing = await User.findOne({ username: username.toLowerCase() });
     if (existing) {
       return Response.json(
-        { error: "Username already taken" },
+        { error: "Ese nombre de usuario ya existe" },
         { status: 409 }
       );
     }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Register error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al registrar:", error);
+    return Response.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

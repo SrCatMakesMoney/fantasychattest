@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB();
     const { searchParams } = request.nextUrl;
-    const page = parseInt(searchParams.get("page") || "1");
+    const page = parseInt(searchParams.get("pagina") || "1");
     const limit = 20;
 
     const posts = await Post.find()
@@ -16,10 +16,10 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .populate("author", "username displayName avatar realm");
 
-    return Response.json({ posts });
+    return Response.json({ publicaciones: posts });
   } catch (error) {
-    console.error("Get posts error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al obtener publicaciones:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }
 
@@ -27,19 +27,19 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
-    const { content } = await request.json();
+    const { content, image } = await request.json();
 
     if (!content || content.trim().length === 0) {
-      return Response.json({ error: "Content is required" }, { status: 400 });
+      return Response.json({ error: "El contenido es requerido" }, { status: 400 });
     }
 
     if (content.length > 500) {
       return Response.json(
-        { error: "Content too long (max 500 chars)" },
+        { error: "Muy largo (max 500 caracteres)" },
         { status: 400 }
       );
     }
@@ -47,13 +47,14 @@ export async function POST(request: NextRequest) {
     const post = await Post.create({
       author: session.userId,
       content: content.trim(),
+      image: image || "",
     });
 
     const populated = await post.populate("author", "username displayName avatar realm");
 
-    return Response.json({ post: populated }, { status: 201 });
+    return Response.json({ publicacion: populated }, { status: 201 });
   } catch (error) {
-    console.error("Create post error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al crear publicacion:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }

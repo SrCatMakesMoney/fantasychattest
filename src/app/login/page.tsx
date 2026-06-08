@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const endpoint = isRegister ? "/api/auth/register" : "/api/auth/login";
+      const endpoint = isRegister ? "/api/auth/registro" : "/api/auth/login";
       const body = isRegister
         ? { username, displayName, password }
         : { username, password };
@@ -31,13 +31,13 @@ export default function LoginPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Something went wrong");
+        setError(data.error || "Algo salio mal");
         return;
       }
 
-      router.push("/feed");
+      router.push("/muro");
     } catch {
-      setError("Connection failed. The dark realm is unreachable.");
+      setError("El reino oscuro no responde...");
     } finally {
       setLoading(false);
     }
@@ -45,66 +45,65 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="castle-card rounded-lg p-8 w-full max-w-md">
-        {/* Castle Tower Decoration */}
+      <div className="castle-card p-8 w-full max-w-md pixel-fade-in">
         <div className="text-center mb-8">
-          <div className="text-4xl mb-2">🏰</div>
-          <h1 className="font-[family-name:var(--font-family-gothic)] text-2xl font-bold glow-text text-[var(--color-accent-gold)]">
+          <div className="castle-tower mb-4">🏰</div>
+          <h1 className="pixel-title text-[var(--color-accent-gold)] glow-text text-base">
             FantasyChat
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-sm mt-1">
-            Enter the Dark Realm
+          <p className="text-[var(--color-text-secondary)] text-sm mt-3">
+            ─── Entra al Reino Oscuro ───
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-[var(--color-text-secondary)] text-xs uppercase tracking-wider mb-1 font-[family-name:var(--font-family-gothic)]">
-              Username
+            <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
+              Usuario
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="input-fantasy"
-              placeholder="dark_wanderer"
+              placeholder="guerrero_oscuro"
               required
             />
           </div>
 
           {isRegister && (
             <div>
-              <label className="block text-[var(--color-text-secondary)] text-xs uppercase tracking-wider mb-1 font-[family-name:var(--font-family-gothic)]">
-                Display Name
+              <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
+                Nombre
               </label>
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 className="input-fantasy"
-                placeholder="The Dark Wanderer"
+                placeholder="El Guerrero Oscuro"
                 required
               />
             </div>
           )}
 
           <div>
-            <label className="block text-[var(--color-text-secondary)] text-xs uppercase tracking-wider mb-1 font-[family-name:var(--font-family-gothic)]">
-              Password
+            <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
+              Contrasena
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input-fantasy"
-              placeholder="••••••••"
+              placeholder="********"
               required
             />
           </div>
 
           {error && (
-            <p className="text-[var(--color-accent-red)] text-sm text-center">
-              ⚔️ {error}
+            <p className="text-[var(--color-accent-red)] text-sm text-center pixel-fade-in">
+              {error}
             </p>
           )}
 
@@ -114,10 +113,10 @@ export default function LoginPage() {
             className="btn-fantasy w-full py-3"
           >
             {loading
-              ? "Opening the gates..."
+              ? "Abriendo puertas..."
               : isRegister
-              ? "Join the Realm"
-              : "Enter the Castle"}
+              ? "Crear alma"
+              : "Entrar al castillo"}
           </button>
         </form>
 
@@ -130,8 +129,8 @@ export default function LoginPage() {
             className="text-[var(--color-text-secondary)] text-sm hover:text-[var(--color-accent-gold)] transition-colors"
           >
             {isRegister
-              ? "Already have a soul? Enter here"
-              : "New to the realm? Create your soul"}
+              ? "Ya tienes alma? Entra aqui"
+              : "Nuevo en el reino? Crea tu alma"}
           </button>
         </div>
       </div>

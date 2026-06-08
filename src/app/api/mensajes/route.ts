@@ -8,15 +8,15 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
     const { searchParams } = request.nextUrl;
-    const otherUserId = searchParams.get("with");
+    const otherUserId = searchParams.get("con");
 
     if (!otherUserId) {
-      return Response.json({ error: "Specify user with 'with' param" }, { status: 400 });
+      return Response.json({ error: "Especifica usuario con parametro 'con'" }, { status: 400 });
     }
 
     const messages = await Message.find({
@@ -35,10 +35,10 @@ export async function GET(request: NextRequest) {
       { read: true }
     );
 
-    return Response.json({ messages });
+    return Response.json({ mensajes: messages });
   } catch (error) {
-    console.error("Get messages error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al obtener mensajes:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
@@ -54,14 +54,14 @@ export async function POST(request: NextRequest) {
 
     if (!receiverId || !content) {
       return Response.json(
-        { error: "Receiver and content are required" },
+        { error: "Destinatario y contenido son requeridos" },
         { status: 400 }
       );
     }
 
     const receiver = await User.findById(receiverId);
     if (!receiver) {
-      return Response.json({ error: "Receiver not found" }, { status: 404 });
+      return Response.json({ error: "Destinatario no encontrado" }, { status: 404 });
     }
 
     const message = await Message.create({
@@ -75,9 +75,9 @@ export async function POST(request: NextRequest) {
       { path: "receiver", select: "username displayName avatar" },
     ]);
 
-    return Response.json({ message: populated }, { status: 201 });
+    return Response.json({ mensaje: populated }, { status: 201 });
   } catch (error) {
-    console.error("Send message error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al enviar mensaje:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }

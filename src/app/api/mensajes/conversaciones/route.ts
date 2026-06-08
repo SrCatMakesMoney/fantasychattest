@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
@@ -20,9 +20,7 @@ export async function GET() {
           ],
         },
       },
-      {
-        $sort: { createdAt: -1 },
-      },
+      { $sort: { createdAt: -1 } },
       {
         $group: {
           _id: {
@@ -74,9 +72,9 @@ export async function GET() {
       },
     ]);
 
-    return Response.json({ conversations });
+    return Response.json({ conversaciones: conversations });
   } catch (error) {
-    console.error("Conversations error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error en conversaciones:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }

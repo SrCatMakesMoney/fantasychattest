@@ -27,11 +27,12 @@ interface Post {
   _id: string;
   author: PostAuthor;
   content: string;
+  image: string;
   likes: string[];
   createdAt: string;
 }
 
-export default function FeedPage() {
+export default function MuroPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -52,10 +53,10 @@ export default function FeedPage() {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await fetch("/api/posts");
+      const res = await fetch("/api/publicaciones");
       if (res.ok) {
         const data = await res.json();
-        setPosts(data.posts);
+        setPosts(data.publicaciones);
       }
     } finally {
       setLoading(false);
@@ -69,14 +70,14 @@ export default function FeedPage() {
   }, [fetchPosts]);
 
   const handleMessageUser = (userId: string) => {
-    router.push(`/messages?with=${userId}`);
+    router.push(`/mensajes?con=${userId}`);
   };
 
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[var(--color-text-muted)] font-[family-name:var(--font-family-gothic)]">
-          Opening the castle gates...
+        <p className="text-[var(--color-text-muted)] pixel-title text-[10px]">
+          Abriendo las puertas del castillo...
         </p>
       </div>
     );
@@ -87,11 +88,11 @@ export default function FeedPage() {
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-6">
         <div className="mb-6">
-          <h2 className="font-[family-name:var(--font-family-gothic)] text-xl font-bold glow-text text-[var(--color-accent-gold)] mb-1">
-            📜 Realm Feed
+          <h2 className="pixel-title glow-text text-sm mb-2">
+            📜 Muro del Reino
           </h2>
           <p className="text-[var(--color-text-muted)] text-sm">
-            Proclamations from across the dark lands
+            ── Proclamaciones de las tierras oscuras ──
           </p>
         </div>
 
@@ -100,14 +101,14 @@ export default function FeedPage() {
         {loading ? (
           <div className="text-center py-8">
             <p className="text-[var(--color-text-muted)]">
-              Summoning messages from the void...
+              Invocando mensajes del vacio...
             </p>
           </div>
         ) : posts.length === 0 ? (
-          <div className="castle-card rounded-lg p-8 text-center">
-            <p className="text-[var(--color-text-muted)] text-lg">🏰</p>
-            <p className="text-[var(--color-text-secondary)] mt-2">
-              The realm is silent. Be the first to break the darkness.
+          <div className="castle-card p-8 text-center">
+            <p className="text-2xl mb-2">🏰</p>
+            <p className="text-[var(--color-text-secondary)]">
+              El reino esta en silencio. Se el primero en romper la oscuridad.
             </p>
           </div>
         ) : (

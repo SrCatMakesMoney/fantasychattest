@@ -7,13 +7,13 @@ export async function GET() {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
     const user = await User.findById(session.userId).select("-password");
     if (!user) {
-      return Response.json({ error: "User not found" }, { status: 404 });
+      return Response.json({ error: "Usuario no encontrado" }, { status: 404 });
     }
 
     return Response.json({
@@ -27,8 +27,8 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Me error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error en sesion:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }
 

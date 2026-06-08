@@ -12,19 +12,19 @@ export async function POST(request: NextRequest) {
 
     if (!username || !password) {
       return Response.json(
-        { error: "Username and password are required" },
+        { error: "Usuario y contrasena son requeridos" },
         { status: 400 }
       );
     }
 
     const user = await User.findOne({ username: username.toLowerCase() });
     if (!user) {
-      return Response.json({ error: "Invalid credentials" }, { status: 401 });
+      return Response.json({ error: "Credenciales invalidas" }, { status: 401 });
     }
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
-      return Response.json({ error: "Invalid credentials" }, { status: 401 });
+      return Response.json({ error: "Credenciales invalidas" }, { status: 401 });
     }
 
     const token = signToken({ userId: user._id.toString(), username: user.username });
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al iniciar sesion:", error);
+    return Response.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

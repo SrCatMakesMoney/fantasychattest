@@ -14,6 +14,7 @@ interface Post {
   _id: string;
   author: PostAuthor;
   content: string;
+  image: string;
   likes: string[];
   createdAt: string;
 }
@@ -33,7 +34,7 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
     if (likeLoading) return;
     setLikeLoading(true);
     try {
-      const res = await fetch("/api/posts/like", {
+      const res = await fetch("/api/publicaciones/megusta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ postId: post._id }),
@@ -52,21 +53,21 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
     const seconds = Math.floor(
       (new Date().getTime() - new Date(post.createdAt).getTime()) / 1000
     );
-    if (seconds < 60) return "just now";
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    return `${Math.floor(seconds / 86400)}d ago`;
+    if (seconds < 60) return "ahora";
+    if (seconds < 3600) return `hace ${Math.floor(seconds / 60)}m`;
+    if (seconds < 86400) return `hace ${Math.floor(seconds / 3600)}h`;
+    return `hace ${Math.floor(seconds / 86400)}d`;
   }, [post.createdAt]);
 
   return (
-    <div className="castle-card rounded-lg p-4 mb-3">
+    <div className="castle-card p-4 mb-3 pixel-fade-in">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-[var(--color-bg-hover)] border border-[var(--color-border-dark)] flex items-center justify-center text-lg flex-shrink-0">
+        <div className="w-10 h-10 pixel-avatar flex items-center justify-center text-lg flex-shrink-0">
           ⚔️
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-[family-name:var(--font-family-gothic)] text-sm font-semibold text-[var(--color-accent-gold)]">
+            <span className="pixel-title text-[var(--color-accent-gold)] text-[9px]">
               {post.author.displayName}
             </span>
             <span className="text-[var(--color-text-muted)] text-xs">
@@ -85,6 +86,17 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
           <p className="mt-2 text-[var(--color-text-primary)] whitespace-pre-wrap break-words">
             {post.content}
           </p>
+          {post.image && (
+            <div className="mt-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={post.image}
+                alt="Imagen del post"
+                className="max-w-full max-h-80 border-2 border-[var(--color-border-dark)]"
+                style={{ imageRendering: "auto" }}
+              />
+            </div>
+          )}
           <div className="flex items-center gap-4 mt-3">
             <button
               onClick={handleLike}
@@ -102,7 +114,7 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
                 onClick={() => onMessageUser(post.author._id)}
                 className="flex items-center gap-1 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent-purple)] transition-colors"
               >
-                💀 DM
+                💀 Mensaje
               </button>
             )}
           </div>

@@ -7,12 +7,12 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ error: "No autenticado" }, { status: 401 });
     }
 
     await connectDB();
     const { searchParams } = request.nextUrl;
-    const search = searchParams.get("search") || "";
+    const search = searchParams.get("buscar") || "";
 
     const query = search
       ? {
@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
       .limit(20)
       .sort({ createdAt: -1 });
 
-    return Response.json({ users });
+    return Response.json({ usuarios: users });
   } catch (error) {
-    console.error("Get users error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error al buscar usuarios:", error);
+    return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }
