@@ -51,7 +51,10 @@ export async function POST(request: NextRequest) {
       mediaType: mediaType || "",
     });
 
-    const populated = await post.populate("author", "username displayName avatar realm");
+    const populated = await Post.findById(post._id).populate(
+      "author",
+      "username displayName avatar realm"
+    );
 
     return Response.json({ publicacion: populated }, { status: 201 });
   } catch (error) {

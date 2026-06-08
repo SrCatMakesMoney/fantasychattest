@@ -80,11 +80,11 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="castle-card p-4 mb-4 pixel-fade-in">
+    <form onSubmit={handleSubmit} className="castle-card p-5 mb-5 fade-in">
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Susurra al reino oscuro..."
+        placeholder="Proclama tu mensaje al reino..."
         className="input-fantasy resize-none h-24"
         maxLength={500}
       />
@@ -97,15 +97,10 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               src={mediaUrl}
               alt="Vista previa"
               className="max-h-48 media-frame"
-              style={{ imageRendering: "auto" }}
             />
           )}
           {mediaType === "video" && (
-            <video
-              src={mediaUrl}
-              controls
-              className="max-h-48 media-frame"
-            />
+            <video src={mediaUrl} controls className="max-h-48 media-frame" />
           )}
           {mediaType === "audio" && (
             <div className="media-frame p-3">
@@ -115,15 +110,15 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
           <button
             type="button"
             onClick={removeMedia}
-            className="absolute top-1 right-1 bg-[var(--color-accent-red)] text-white w-6 h-6 flex items-center justify-center pixel-title text-[8px] border-2 border-black"
+            className="absolute -top-2 -right-2 bg-[var(--color-accent-red)] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border border-black shadow-lg hover:scale-110 transition-transform"
           >
             X
           </button>
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-3 gap-2">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between mt-4 gap-3">
+        <div className="flex items-center gap-4">
           {cloudinaryReady && (
             <>
               <input
@@ -137,10 +132,14 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="text-[var(--color-text-muted)] hover:text-[var(--color-accent-gold)] transition-colors pixel-title text-[8px]"
-                title="Subir archivo"
+                className="text-[var(--color-text-muted)] hover:text-[var(--color-accent-gold)] transition-colors text-sm"
+                title="Adjuntar imagen, video o audio"
               >
-                {uploading ? "Subiendo..." : "[+Media]"}
+                {uploading ? (
+                  <span className="pulse-glow">Subiendo...</span>
+                ) : (
+                  "Adjuntar media"
+                )}
               </button>
             </>
           )}
@@ -156,7 +155,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
           disabled={!content.trim() || loading || uploading}
           className="btn-fantasy"
         >
-          {loading ? "..." : "Publicar"}
+          {loading ? "Enviando..." : "Publicar"}
         </button>
       </div>
     </form>

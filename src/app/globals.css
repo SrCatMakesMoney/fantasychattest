@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #0d0208;
-  --color-bg-secondary: #1a0a2e;
-  --color-bg-card: #120318;
-  --color-bg-hover: #2a1040;
-  --color-border-dark: #3d1a6e;
-  --color-border-glow: #6b2fa0;
-  --color-text-primary: #d4c4a8;
-  --color-text-secondary: #9a8866;
-  --color-text-muted: #665533;
-  --color-accent-purple: #8b45c6;
-  --color-accent-red: #cc3333;
-  --color-accent-gold: #ffcc00;
-  --color-accent-blood: #880000;
-  --color-accent-green: #44cc44;
-  --font-family-pixel: "Press Start 2P", monospace;
-  --font-family-body: "VT323", monospace;
+  --color-bg-primary: #0f0a1a;
+  --color-bg-secondary: #1a1030;
+  --color-bg-card: rgba(15, 10, 30, 0.92);
+  --color-bg-hover: #261845;
+  --color-border-dark: #3a2060;
+  --color-border-glow: #7040b0;
+  --color-text-primary: #e0d6c2;
+  --color-text-secondary: #b0a080;
+  --color-text-muted: #706050;
+  --color-accent-purple: #9050d0;
+  --color-accent-red: #d04040;
+  --color-accent-gold: #e8b830;
+  --color-accent-blood: #900020;
+  --color-accent-green: #40b040;
+  --font-family-title: "Cinzel Decorative", "Cinzel", "Georgia", serif;
+  --font-family-body: "Crimson Text", "Georgia", serif;
 }
 
 @layer base {
@@ -24,20 +24,47 @@
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     font-family: var(--font-family-body);
-    font-size: 18px;
-    image-rendering: pixelated;
+    font-size: 17px;
+    line-height: 1.6;
   }
 }
 
 @layer components {
+  .castle-bg {
+    background-color: #0a0612;
+    background-image: url("/castle-bricks.png");
+    background-size: 300px;
+    background-repeat: repeat;
+    position: relative;
+  }
+
+  .castle-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(100, 50, 150, 0.15), transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(140, 30, 30, 0.1), transparent 50%),
+      linear-gradient(180deg, rgba(10, 6, 18, 0.7) 0%, rgba(10, 6, 18, 0.5) 50%, rgba(10, 6, 18, 0.8) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .castle-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+
   .castle-card {
     background: var(--color-bg-card);
-    border: 3px solid var(--color-border-dark);
+    border: 1px solid var(--color-border-dark);
+    border-radius: 4px;
     box-shadow:
-      0 0 0 1px #000,
-      inset 0 0 0 1px rgba(107, 47, 160, 0.15),
-      0 4px 0 #000;
+      0 2px 12px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(112, 64, 176, 0.1);
+    backdrop-filter: blur(8px);
     position: relative;
+    overflow: hidden;
   }
 
   .castle-card::before {
@@ -46,165 +73,169 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 1px;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--color-border-glow) 20%,
+      var(--color-border-glow) 30%,
       var(--color-accent-gold) 50%,
-      var(--color-border-glow) 80%,
+      var(--color-border-glow) 70%,
       transparent 100%
     );
-    opacity: 0.4;
+    opacity: 0.5;
   }
 
   .glow-text {
     text-shadow:
-      0 0 10px var(--color-accent-gold),
-      0 0 20px rgba(255, 204, 0, 0.4),
-      2px 2px 0 #000;
+      0 0 12px rgba(232, 184, 48, 0.6),
+      0 0 30px rgba(232, 184, 48, 0.3);
     color: var(--color-accent-gold);
   }
 
   .btn-fantasy {
-    background: var(--color-accent-purple);
-    border: 3px solid var(--color-accent-gold);
-    box-shadow: 0 4px 0 #000, inset 0 -2px 0 rgba(0,0,0,0.3);
+    background: linear-gradient(180deg, #a060e0 0%, #7040a0 100%);
+    border: 1px solid var(--color-accent-gold);
+    border-radius: 3px;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
     color: #fff;
-    padding: 0.5rem 1.5rem;
-    font-family: var(--font-family-pixel);
+    padding: 0.6rem 1.5rem;
+    font-family: var(--font-family-title);
     text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    transition: all 0.1s ease;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    transition: all 0.2s ease;
     cursor: pointer;
   }
 
   .btn-fantasy:hover {
-    background: var(--color-border-glow);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 #000, inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 12px rgba(139, 69, 198, 0.4);
+    background: linear-gradient(180deg, #b070f0 0%, #8050b0 100%);
+    box-shadow:
+      0 4px 16px rgba(144, 80, 208, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
 
   .btn-fantasy:active {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #000, inset 0 -2px 0 rgba(0,0,0,0.3);
+    transform: translateY(1px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   }
 
   .btn-fantasy:disabled {
     opacity: 0.4;
     cursor: not-allowed;
     transform: none;
-    box-shadow: 0 4px 0 #000;
   }
 
   .input-fantasy {
-    background: #08010a;
-    border: 3px solid var(--color-border-dark);
+    background: rgba(5, 2, 10, 0.8);
+    border: 1px solid var(--color-border-dark);
+    border-radius: 3px;
     color: var(--color-text-primary);
     padding: 0.75rem 1rem;
     width: 100%;
     font-family: var(--font-family-body);
-    font-size: 18px;
-    transition: border-color 0.2s ease;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+    font-size: 17px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
   }
 
   .input-fantasy:focus {
     outline: none;
     border-color: var(--color-accent-gold);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 0 8px rgba(255, 204, 0, 0.25);
+    box-shadow:
+      inset 0 2px 6px rgba(0, 0, 0, 0.5),
+      0 0 12px rgba(232, 184, 48, 0.2);
   }
 
   .input-fantasy::placeholder {
     color: var(--color-text-muted);
+    font-style: italic;
   }
 
   .scrollbar-dark::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   .scrollbar-dark::-webkit-scrollbar-track {
-    background: var(--color-bg-primary);
-    border-left: 2px solid var(--color-border-dark);
+    background: rgba(0, 0, 0, 0.3);
   }
 
   .scrollbar-dark::-webkit-scrollbar-thumb {
     background: var(--color-border-dark);
-    border: 1px solid #000;
+    border-radius: 3px;
   }
 
-  .castle-bg {
-    background-color: var(--color-bg-primary);
-    background-image:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(107, 47, 160, 0.02) 2px,
-        rgba(107, 47, 160, 0.02) 4px
-      ),
-      radial-gradient(ellipse at top, rgba(107, 47, 160, 0.12), transparent 60%),
-      radial-gradient(ellipse at bottom, rgba(136, 0, 0, 0.08), transparent 60%);
-  }
-
-  .pixel-avatar {
-    border: 3px solid var(--color-accent-gold);
-    box-shadow: 0 0 0 2px #000;
-    background: var(--color-bg-hover);
+  .fantasy-avatar {
+    border: 2px solid var(--color-accent-gold);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(232, 184, 48, 0.3);
+    background: linear-gradient(135deg, #1a1030, #2a1845);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-family-pixel);
-    font-size: 10px;
+    font-family: var(--font-family-title);
+    font-weight: 700;
     color: var(--color-accent-gold);
   }
 
-  .pixel-title {
-    font-family: var(--font-family-pixel);
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+  .fantasy-title {
+    font-family: var(--font-family-title);
+    font-weight: 700;
+    letter-spacing: 0.06em;
   }
 
-  .pixel-divider {
+  .fantasy-divider {
     border: none;
-    border-top: 2px dashed var(--color-border-dark);
-    opacity: 0.5;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-border-dark) 20%,
+      var(--color-border-glow) 50%,
+      var(--color-border-dark) 80%,
+      transparent
+    );
+    opacity: 0.6;
   }
 
-  .pixel-tag {
-    font-family: var(--font-family-pixel);
-    font-size: 8px;
-    padding: 2px 8px;
-    border: 2px solid var(--color-border-dark);
-    background: var(--color-bg-hover);
+  .realm-badge {
+    font-family: var(--font-family-title);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 2px;
+    background: rgba(144, 80, 208, 0.15);
     color: var(--color-accent-purple);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
   }
 
-  @keyframes pixel-fade-in {
-    from { opacity: 0; transform: translateY(4px); }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .pixel-fade-in {
-    animation: pixel-fade-in 0.3s ease-out;
+  .fade-in {
+    animation: fade-in 0.4s ease-out;
   }
 
   @keyframes pulse-glow {
-    0%, 100% { opacity: 0.6; }
+    0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
   }
 
   .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
+    animation: pulse-glow 2.5s ease-in-out infinite;
   }
 
   .media-frame {
-    border: 3px solid var(--color-border-dark);
-    box-shadow: 0 2px 0 #000;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     background: #000;
     overflow: hidden;
   }

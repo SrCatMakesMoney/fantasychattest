@@ -45,23 +45,21 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="castle-card p-8 w-full max-w-md pixel-fade-in">
-        <div className="text-center mb-8">
-          <div className="pixel-title text-[var(--color-accent-gold)] glow-text text-lg mb-3">
-            [ FANTASYCHAT ]
-          </div>
-          <div className="text-[var(--color-text-muted)] text-xs pixel-title">
-            ........::::::::........
-          </div>
-          <p className="text-[var(--color-text-secondary)] text-sm mt-3">
+      <div className="castle-card p-10 w-full max-w-md fade-in">
+        <div className="text-center mb-10">
+          <h1 className="fantasy-title glow-text text-3xl mb-2">
+            Fantasy X
+          </h1>
+          <div className="fantasy-divider my-4" />
+          <p className="text-[var(--color-text-secondary)] text-sm italic">
             Entra al Reino Oscuro
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
-              {"> "}Usuario
+            <label className="block text-[var(--color-accent-gold)] fantasy-title text-xs mb-2 tracking-wider">
+              Usuario
             </label>
             <input
               type="text"
@@ -74,9 +72,9 @@ export default function LoginPage() {
           </div>
 
           {isRegister && (
-            <div>
-              <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
-                {"> "}Nombre
+            <div className="fade-in">
+              <label className="block text-[var(--color-accent-gold)] fantasy-title text-xs mb-2 tracking-wider">
+                Nombre
               </label>
               <input
                 type="text"
@@ -90,8 +88,8 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
-              {"> "}Contrasena
+            <label className="block text-[var(--color-accent-gold)] fantasy-title text-xs mb-2 tracking-wider">
+              Contrasena
             </label>
             <input
               type="password"
@@ -104,7 +102,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="text-[var(--color-accent-red)] text-sm text-center pixel-fade-in border-2 border-[var(--color-accent-red)] p-2 bg-[rgba(204,51,51,0.1)]">
+            <div className="text-[var(--color-accent-red)] text-sm text-center fade-in border border-[var(--color-accent-red)] rounded p-3 bg-[rgba(208,64,64,0.1)]">
               {error}
             </div>
           )}
@@ -115,15 +113,15 @@ export default function LoginPage() {
             className="btn-fantasy w-full py-3"
           >
             {loading
-              ? "Abriendo puertas..."
+              ? "Abriendo las puertas..."
               : isRegister
-              ? "[ Crear alma ]"
-              : "[ Entrar ]"}
+              ? "Crear Alma"
+              : "Entrar al Castillo"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <div className="pixel-divider mb-4" />
+        <div className="mt-8 text-center">
+          <div className="fantasy-divider mb-5" />
           <button
             onClick={() => {
               setIsRegister(!isRegister);
