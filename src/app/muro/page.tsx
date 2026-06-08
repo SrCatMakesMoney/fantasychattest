@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import PostCard from "@/components/PostCard";
@@ -39,6 +39,7 @@ export default function MuroPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [authChecking, setAuthChecking] = useState(true);
+  const retryCount = useRef(0);
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -46,9 +47,16 @@ export default function MuroPage() {
       if (res.ok) {
         const data = await res.json();
         setPosts(data.publicaciones);
+        retryCount.current = 0;
+      } else if (retryCount.current < 3) {
+        retryCount.current++;
+        setTimeout(() => fetchPosts(), 2000);
       }
     } catch {
-      // network error, keep existing posts
+      if (retryCount.current < 3) {
+        retryCount.current++;
+        setTimeout(() => fetchPosts(), 2000);
+      }
     } finally {
       setLoadingPosts(false);
     }
@@ -80,6 +88,7 @@ export default function MuroPage() {
   }, [fetchPosts]);
 
   const handlePostCreated = useCallback(async () => {
+    retryCount.current = 0;
     await fetchPosts();
     setTimeout(fetchPosts, 1500);
   }, [fetchPosts]);
@@ -127,9 +136,19 @@ export default function MuroPage() {
             <p className="fantasy-title text-[var(--color-accent-gold)] text-sm mb-2">
               Silencio en el Reino
             </p>
-            <p className="text-[var(--color-text-secondary)] italic">
+            <p className="text-[var(--color-text-secondary)] italic mb-4">
               Se el primero en romper la oscuridad.
             </p>
+            <button
+              onClick={() => {
+                setLoadingPosts(true);
+                retryCount.current = 0;
+                fetchPosts();
+              }}
+              className="btn-ghost text-xs"
+            >
+              Reintentar
+            </button>
           </div>
         ) : (
           <div>

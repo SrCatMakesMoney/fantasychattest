@@ -1,40 +1,48 @@
 import mongoose from "mongoose";
 
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
 declare global {
   // eslint-disable-next-line no-var
-  var mongooseCache: MongooseCache | undefined;
+  var _mongoPromise: Promise<typeof mongoose> | undefined;
 }
 
-const cached: MongooseCache = global.mongooseCache || { conn: null, promise: null };
-global.mongooseCache = cached;
-
 export async function connectDB() {
-  if (cached.conn && mongoose.connection.readyState === 1) {
-    return cached.conn;
-  }
-
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
+  if (!MONGODB_URI) {
     throw new Error("Define la variable MONGODB_URI");
   }
 
-  if (!cached.promise || mongoose.connection.readyState === 0) {
-    cached.promise = mongoose.connect(uri, { dbName: "fantasy" });
+  if (mongoose.connection.readyState >= 1) {
+    return mongoose;
+  }
+
+  if (!global._mongoPromise) {
+    global._mongoPromise = mongoose.connect(MONGODB_URI, {
+      dbName: "fantasy",
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 30000,
+    });
+
+    mongoose.connection.on("disconnected", () => {
+      global._mongoPromise = undefined;
+    });
+
+    mongoose.connection.on("error", () => {
+      global._mongoPromise = undefined;
+    });
   }
 
   try {
-    cached.conn = await cached.promise;
+    await global._mongoPromise;
   } catch {
-    cached.promise = null;
-    cached.conn = null;
-    cached.promise = mongoose.connect(uri, { dbName: "fantasy" });
-    cached.conn = await cached.promise;
+    global._mongoPromise = undefined;
+    global._mongoPromise = mongoose.connect(MONGODB_URI, {
+      dbName: "fantasy",
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 30000,
+    });
+    await global._mongoPromise;
   }
 
-  return cached.conn;
+  return mongoose;
 }
