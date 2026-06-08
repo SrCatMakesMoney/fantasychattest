@@ -37,8 +37,20 @@ export default function MuroPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [authChecked, setAuthChecked] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [authChecking, setAuthChecking] = useState(true);
+
+  const fetchPosts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/publicaciones");
+      if (res.ok) {
+        const data = await res.json();
+        setPosts(data.publicaciones);
+      }
+    } finally {
+      setLoadingPosts(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -50,37 +62,26 @@ export default function MuroPage() {
         }
         const data = await res.json();
         setUser(data.user);
+      } catch {
+        router.push("/login");
       } finally {
-        setAuthChecked(true);
+        setAuthChecking(false);
       }
     };
     fetchUser();
   }, [router]);
 
-  const fetchPosts = useCallback(async () => {
-    try {
-      const res = await fetch("/api/publicaciones");
-      if (res.ok) {
-        const data = await res.json();
-        setPosts(data.publicaciones);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    if (!authChecked || !user) return;
     fetchPosts();
     const interval = setInterval(fetchPosts, 10000);
     return () => clearInterval(interval);
-  }, [authChecked, user, fetchPosts]);
+  }, [fetchPosts]);
 
   const handleMessageUser = (userId: string) => {
     router.push(`/mensajes?con=${userId}`);
   };
 
-  if (!user) {
+  if (authChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-[var(--color-text-muted)] fantasy-title text-sm pulse-glow">
@@ -108,7 +109,7 @@ export default function MuroPage() {
 
         <CreatePost onPostCreated={fetchPosts} />
 
-        {loading ? (
+        {loadingPosts ? (
           <div className="text-center py-12">
             <p className="text-[var(--color-text-muted)] pulse-glow italic">
               Invocando mensajes del vacio...
@@ -129,7 +130,7 @@ export default function MuroPage() {
               <PostCard
                 key={post._id}
                 post={post}
-                currentUserId={user.id}
+                currentUserId={user?.id || ""}
                 onMessageUser={handleMessageUser}
               />
             ))}
