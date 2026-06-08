@@ -2,10 +2,33 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch("/api/mensajes/conversaciones");
+        if (res.ok) {
+          const data = await res.json();
+          const total = data.conversaciones.reduce(
+            (sum: number, c: { unreadCount: number }) => sum + c.unreadCount,
+            0
+          );
+          setUnreadCount(total);
+        }
+      } catch {
+        // silent
+      }
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 8000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = async () => {
     await fetch("/api/auth/me", { method: "DELETE" });
@@ -22,6 +45,7 @@ export default function Navbar() {
           <path d="M7 16V10h4v6" />
         </svg>
       ),
+      badge: 0,
     },
     {
       href: "/mensajes",
@@ -31,6 +55,7 @@ export default function Navbar() {
           <path d="M2 3h14v9H5l-3 3V3z" />
         </svg>
       ),
+      badge: unreadCount,
     },
     {
       href: "/perfil",
@@ -41,6 +66,7 @@ export default function Navbar() {
           <path d="M3 16c0-3 3-5 6-5s6 2 6 5" />
         </svg>
       ),
+      badge: 0,
     },
   ];
 
@@ -56,14 +82,26 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm transition-all fantasy-title tracking-wider ${
+              className={`relative flex items-center gap-2 px-3 sm:px-4 py-2 text-sm transition-all fantasy-title tracking-wider ${
                 pathname === item.href
                   ? "text-[var(--color-accent-gold)] bg-[var(--color-bg-hover)] border-b-2 border-[var(--color-accent-gold)]"
                   : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[rgba(38,24,69,0.5)]"
               }`}
             >
-              <span className="sm:hidden">{item.icon}</span>
+              <span className="sm:hidden relative">
+                {item.icon}
+                {item.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-[var(--color-accent-red)] text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                    {item.badge > 9 ? "9+" : item.badge}
+                  </span>
+                )}
+              </span>
               <span className="hidden sm:inline">{item.label}</span>
+              {item.badge > 0 && (
+                <span className="hidden sm:flex bg-[var(--color-accent-red)] text-white text-[9px] w-5 h-5 items-center justify-center rounded-full font-bold">
+                  {item.badge > 9 ? "9+" : item.badge}
+                </span>
+              )}
             </Link>
           ))}
           <button

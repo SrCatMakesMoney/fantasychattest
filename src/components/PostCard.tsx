@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 interface PostAuthor {
   _id: string;
@@ -34,6 +35,7 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, currentUserId, onMessageUser }: PostCardProps) {
+  const router = useRouter();
   const [likes, setLikes] = useState(post.likes.length);
   const [liked, setLiked] = useState(post.likes.includes(currentUserId));
   const [likeLoading, setLikeLoading] = useState(false);
@@ -114,26 +116,37 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
   return (
     <div className="castle-card p-5 mb-4 fade-in">
       <div className="flex items-start gap-4">
-        {post.author.avatar ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.author.avatar}
-            alt={post.author.displayName}
-            className="w-11 h-11 rounded-full border-2 border-[var(--color-accent-gold)] object-cover flex-shrink-0 shadow-[0_0_8px_rgba(232,184,48,0.3)]"
-          />
-        ) : (
-          <div className="w-11 h-11 fantasy-avatar flex-shrink-0 text-sm">
-            {initial}
-          </div>
-        )}
+        <button
+          onClick={() => router.push(`/usuario?id=${post.author._id}`)}
+          className="flex-shrink-0 cursor-pointer"
+        >
+          {post.author.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={post.author.avatar}
+              alt={post.author.displayName}
+              className="w-11 h-11 rounded-full border-2 border-[var(--color-accent-gold)] object-cover shadow-[0_0_8px_rgba(232,184,48,0.3)]"
+            />
+          ) : (
+            <div className="w-11 h-11 fantasy-avatar text-sm">
+              {initial}
+            </div>
+          )}
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="fantasy-title text-[var(--color-accent-gold)] text-sm">
+            <button
+              onClick={() => router.push(`/usuario?id=${post.author._id}`)}
+              className="fantasy-title text-[var(--color-accent-gold)] text-sm hover:underline cursor-pointer"
+            >
               {post.author.displayName}
-            </span>
-            <span className="text-[var(--color-text-muted)] text-xs">
+            </button>
+            <button
+              onClick={() => router.push(`/usuario?id=${post.author._id}`)}
+              className="text-[var(--color-text-muted)] text-xs hover:text-[var(--color-text-secondary)] cursor-pointer"
+            >
               @{post.author.username}
-            </span>
+            </button>
             <span className="text-[var(--color-text-muted)] text-xs">
               {timeAgoLabel}
             </span>
