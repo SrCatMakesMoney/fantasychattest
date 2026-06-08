@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { uploadMedia, isCloudinaryConfigured, getMediaType } from "@/lib/cloudinary";
 
 interface CreatePostProps {
   onPostCreated: () => void;
@@ -8,19 +9,21 @@ interface CreatePostProps {
 
 export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [imagePreview, setImagePreview] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [mediaType, setMediaType] = useState<"image" | "video" | "audio" | "">("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const cloudinaryReady = isCloudinaryConfigured();
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      setError("Imagen muy grande (max 2MB)");
+    if (file.size > 20 * 1024 * 1024) {
+      setError("Archivo muy grande (max 20MB)");
       return;
     }
 
@@ -28,32 +31,20 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     setError("");
 
     try {
-      const formData = new FormData();
-      formData.append("imagen", file);
-
-      const res = await fetch("/api/subir", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setImageUrl(data.url);
-        setImagePreview(data.url);
-      } else {
-        const data = await res.json();
-        setError(data.error || "Error al subir imagen");
-      }
-    } catch {
-      setError("Error al subir la imagen");
+      const result = await uploadMedia(file);
+      setMediaUrl(result.url);
+      const detected = getMediaType(result.url);
+      setMediaType(detected === "unknown" ? "" : detected);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al subir archivo");
     } finally {
       setUploading(false);
     }
   };
 
-  const removeImage = () => {
-    setImageUrl("");
-    setImagePreview("");
+  const removeMedia = () => {
+    setMediaUrl("");
+    setMediaType("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -68,13 +59,13 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       const res = await fetch("/api/publicaciones", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content, image: imageUrl }),
+        body: JSON.stringify({ content, mediaUrl, mediaType }),
       });
 
       if (res.ok) {
         setContent("");
-        setImageUrl("");
-        setImagePreview("");
+        setMediaUrl("");
+        setMediaType("");
         if (fileInputRef.current) fileInputRef.current.value = "";
         onPostCreated();
       } else {
@@ -98,19 +89,33 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         maxLength={500}
       />
 
-      {imagePreview && (
+      {mediaUrl && (
         <div className="mt-3 relative inline-block">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imagePreview}
-            alt="Vista previa"
-            className="max-h-48 border-2 border-[var(--color-border-dark)]"
-            style={{ imageRendering: "auto" }}
-          />
+          {mediaType === "image" && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={mediaUrl}
+              alt="Vista previa"
+              className="max-h-48 media-frame"
+              style={{ imageRendering: "auto" }}
+            />
+          )}
+          {mediaType === "video" && (
+            <video
+              src={mediaUrl}
+              controls
+              className="max-h-48 media-frame"
+            />
+          )}
+          {mediaType === "audio" && (
+            <div className="media-frame p-3">
+              <audio src={mediaUrl} controls className="w-full" />
+            </div>
+          )}
           <button
             type="button"
-            onClick={removeImage}
-            className="absolute top-1 right-1 bg-[var(--color-accent-red)] text-white w-6 h-6 flex items-center justify-center text-xs border border-black"
+            onClick={removeMedia}
+            className="absolute top-1 right-1 bg-[var(--color-accent-red)] text-white w-6 h-6 flex items-center justify-center pixel-title text-[8px] border-2 border-black"
           >
             X
           </button>
@@ -119,22 +124,26 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
       <div className="flex items-center justify-between mt-3 gap-2">
         <div className="flex items-center gap-3">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-accent-gold)] transition-colors text-sm"
-            title="Subir imagen"
-          >
-            {uploading ? "Subiendo..." : "🖼️ Imagen"}
-          </button>
+          {cloudinaryReady && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,video/*,audio/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="text-[var(--color-text-muted)] hover:text-[var(--color-accent-gold)] transition-colors pixel-title text-[8px]"
+                title="Subir archivo"
+              >
+                {uploading ? "Subiendo..." : "[+Media]"}
+              </button>
+            </>
+          )}
           <span className="text-[var(--color-text-muted)] text-xs">
             {content.length}/500
           </span>

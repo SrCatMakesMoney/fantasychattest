@@ -146,7 +146,7 @@ export default function MensajesContent() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[var(--color-text-muted)] pixel-title text-[10px]">
+        <p className="text-[var(--color-text-muted)] pixel-title text-[10px] pulse-glow">
           Abriendo las puertas del castillo...
         </p>
       </div>
@@ -157,11 +157,11 @@ export default function MensajesContent() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 flex max-w-5xl mx-auto w-full">
-        {/* Barra lateral de conversaciones */}
+        {/* Barra lateral */}
         <div className="w-80 border-r-3 border-[var(--color-border-dark)] flex flex-col bg-[var(--color-bg-card)]">
           <div className="p-4 border-b-3 border-[var(--color-border-dark)]">
             <h2 className="pixel-title text-[var(--color-accent-gold)] text-[9px] mb-3">
-              💀 Mensajes Oscuros
+              {">"} Mensajes Oscuros
             </h2>
             <input
               type="text"
@@ -214,7 +214,7 @@ export default function MensajesContent() {
                       {conv.user.displayName}
                     </span>
                     {conv.unreadCount > 0 && (
-                      <span className="bg-[var(--color-accent-purple)] text-white text-xs w-5 h-5 flex items-center justify-center border border-black">
+                      <span className="bg-[var(--color-accent-purple)] text-white text-xs w-5 h-5 flex items-center justify-center pixel-title text-[8px] border border-black">
                         {conv.unreadCount}
                       </span>
                     )}
@@ -236,7 +236,7 @@ export default function MensajesContent() {
                 {messages.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-[var(--color-text-muted)]">
-                      🏰 Comienza tu conversacion oscura...
+                      Comienza tu conversacion oscura...
                     </p>
                   </div>
                 ) : (
@@ -296,7 +296,9 @@ export default function MensajesContent() {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <p className="text-4xl mb-4">💀</p>
+                <p className="pixel-title text-[var(--color-accent-gold)] glow-text text-sm mb-3">
+                  {"///"} DM {"///"}
+                </p>
                 <p className="text-[var(--color-text-muted)] pixel-title text-[9px]">
                   Selecciona una conversacion
                 </p>

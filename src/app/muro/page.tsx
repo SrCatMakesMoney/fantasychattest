@@ -27,7 +27,8 @@ interface Post {
   _id: string;
   author: PostAuthor;
   content: string;
-  image: string;
+  mediaUrl: string;
+  mediaType: "image" | "video" | "audio" | "";
   likes: string[];
   createdAt: string;
 }
@@ -76,7 +77,7 @@ export default function MuroPage() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[var(--color-text-muted)] pixel-title text-[10px]">
+        <p className="text-[var(--color-text-muted)] pixel-title text-[10px] pulse-glow">
           Abriendo las puertas del castillo...
         </p>
       </div>
@@ -89,24 +90,27 @@ export default function MuroPage() {
       <main className="max-w-2xl mx-auto px-4 py-6">
         <div className="mb-6">
           <h2 className="pixel-title glow-text text-sm mb-2">
-            📜 Muro del Reino
+            {">"} Muro del Reino
           </h2>
           <p className="text-[var(--color-text-muted)] text-sm">
-            ── Proclamaciones de las tierras oscuras ──
+            Proclamaciones de las tierras oscuras
           </p>
+          <hr className="pixel-divider mt-3" />
         </div>
 
         <CreatePost onPostCreated={fetchPosts} />
 
         {loading ? (
           <div className="text-center py-8">
-            <p className="text-[var(--color-text-muted)]">
+            <p className="text-[var(--color-text-muted)] pulse-glow">
               Invocando mensajes del vacio...
             </p>
           </div>
         ) : posts.length === 0 ? (
           <div className="castle-card p-8 text-center">
-            <p className="text-2xl mb-2">🏰</p>
+            <p className="pixel-title text-[var(--color-text-muted)] text-[10px] mb-2">
+              ~ Silencio ~
+            </p>
             <p className="text-[var(--color-text-secondary)]">
               El reino esta en silencio. Se el primero en romper la oscuridad.
             </p>

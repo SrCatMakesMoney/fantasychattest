@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     await connectDB();
-    const { content, image } = await request.json();
+    const { content, mediaUrl, mediaType } = await request.json();
 
     if (!content || content.trim().length === 0) {
       return Response.json({ error: "El contenido es requerido" }, { status: 400 });
@@ -47,7 +47,8 @@ export async function POST(request: NextRequest) {
     const post = await Post.create({
       author: session.userId,
       content: content.trim(),
-      image: image || "",
+      mediaUrl: mediaUrl || "",
+      mediaType: mediaType || "",
     });
 
     const populated = await post.populate("author", "username displayName avatar realm");

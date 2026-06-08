@@ -47,19 +47,21 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="castle-card p-8 w-full max-w-md pixel-fade-in">
         <div className="text-center mb-8">
-          <div className="castle-tower mb-4">🏰</div>
-          <h1 className="pixel-title text-[var(--color-accent-gold)] glow-text text-base">
-            FantasyChat
-          </h1>
+          <div className="pixel-title text-[var(--color-accent-gold)] glow-text text-lg mb-3">
+            [ FANTASYCHAT ]
+          </div>
+          <div className="text-[var(--color-text-muted)] text-xs pixel-title">
+            ........::::::::........
+          </div>
           <p className="text-[var(--color-text-secondary)] text-sm mt-3">
-            ─── Entra al Reino Oscuro ───
+            Entra al Reino Oscuro
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
-              Usuario
+              {"> "}Usuario
             </label>
             <input
               type="text"
@@ -74,7 +76,7 @@ export default function LoginPage() {
           {isRegister && (
             <div>
               <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
-                Nombre
+                {"> "}Nombre
               </label>
               <input
                 type="text"
@@ -89,7 +91,7 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-[var(--color-accent-gold)] pixel-title text-[8px] mb-2">
-              Contrasena
+              {"> "}Contrasena
             </label>
             <input
               type="password"
@@ -102,9 +104,9 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-[var(--color-accent-red)] text-sm text-center pixel-fade-in">
+            <div className="text-[var(--color-accent-red)] text-sm text-center pixel-fade-in border-2 border-[var(--color-accent-red)] p-2 bg-[rgba(204,51,51,0.1)]">
               {error}
-            </p>
+            </div>
           )}
 
           <button
@@ -115,12 +117,13 @@ export default function LoginPage() {
             {loading
               ? "Abriendo puertas..."
               : isRegister
-              ? "Crear alma"
-              : "Entrar al castillo"}
+              ? "[ Crear alma ]"
+              : "[ Entrar ]"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
+          <div className="pixel-divider mb-4" />
           <button
             onClick={() => {
               setIsRegister(!isRegister);

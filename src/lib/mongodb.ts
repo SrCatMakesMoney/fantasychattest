@@ -17,11 +17,11 @@ export async function connectDB() {
 
   const uri = process.env.MONGODB_URI;
   if (!uri) {
-    throw new Error("Please define the MONGODB_URI environment variable");
+    throw new Error("Define la variable MONGODB_URI");
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(uri);
+    cached.promise = mongoose.connect(uri, { dbName: "fantasy" });
   }
 
   cached.conn = await cached.promise;

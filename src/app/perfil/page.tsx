@@ -33,12 +33,14 @@ export default function PerfilPage() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[var(--color-text-muted)] pixel-title text-[10px]">
+        <p className="text-[var(--color-text-muted)] pixel-title text-[10px] pulse-glow">
           Invocando tu alma...
         </p>
       </div>
     );
   }
+
+  const initial = user.displayName?.[0]?.toUpperCase() || "?";
 
   return (
     <div className="min-h-screen">
@@ -46,8 +48,8 @@ export default function PerfilPage() {
       <main className="max-w-2xl mx-auto px-4 py-6">
         <div className="castle-card p-8 text-center pixel-fade-in">
           {/* Avatar */}
-          <div className="w-24 h-24 pixel-avatar flex items-center justify-center text-4xl mx-auto mb-4">
-            ⚔️
+          <div className="w-24 h-24 pixel-avatar text-2xl mx-auto mb-4">
+            {initial}
           </div>
 
           {/* Nombre */}
@@ -62,9 +64,8 @@ export default function PerfilPage() {
 
           {/* Reino */}
           <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-hover)] border-2 border-[var(--color-border-dark)]">
-            <span>🏰</span>
             <span className="text-[var(--color-accent-purple)] pixel-title text-[8px]">
-              {user.realm}
+              {"["} {user.realm} {"]"}
             </span>
           </div>
 
@@ -76,24 +77,24 @@ export default function PerfilPage() {
           {/* Stats */}
           <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto">
             <div className="text-center castle-card p-3">
-              <div className="text-[var(--color-accent-gold)] text-lg">
-                ∞
+              <div className="text-[var(--color-accent-gold)] pixel-title text-xs">
+                +++
               </div>
               <div className="text-[var(--color-text-muted)] pixel-title text-[7px] mt-1">
                 Poder
               </div>
             </div>
             <div className="text-center castle-card p-3">
-              <div className="text-[var(--color-accent-purple)] text-lg">
-                🗡️
+              <div className="text-[var(--color-accent-purple)] pixel-title text-xs">
+                |||
               </div>
               <div className="text-[var(--color-text-muted)] pixel-title text-[7px] mt-1">
                 Guerrero
               </div>
             </div>
             <div className="text-center castle-card p-3">
-              <div className="text-[var(--color-accent-red)] text-lg">
-                🔮
+              <div className="text-[var(--color-accent-red)] pixel-title text-xs">
+                ***
               </div>
               <div className="text-[var(--color-text-muted)] pixel-title text-[7px] mt-1">
                 Guardian
@@ -109,9 +110,9 @@ export default function PerfilPage() {
               await fetch("/api/auth/me", { method: "DELETE" });
               router.push("/login");
             }}
-            className="text-[var(--color-text-muted)] text-sm hover:text-[var(--color-accent-red)] transition-colors"
+            className="text-[var(--color-text-muted)] text-sm hover:text-[var(--color-accent-red)] transition-colors pixel-title text-[8px]"
           >
-            🚪 Abandonar el Reino Oscuro
+            [Abandonar el Reino Oscuro]
           </button>
         </div>
       </main>
