@@ -1,6 +1,13 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Fantasy X - La Red Social de los Reinos Oscuros",
+  description:
+    "Unete a Fantasy X, la red social dark fantasy. Publica proclamaciones, envia mensajes oscuros, personaliza tu perfil de guerrero y explora los reinos.",
+};
 
 export default async function Home() {
   const session = await getSession();

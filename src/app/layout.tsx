@@ -1,9 +1,46 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fantasychat.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Fantasy X - Reino Oscuro",
-  description: "Red social dark fantasy desde las sombras del castillo",
+  title: {
+    default: "Fantasy X - Red Social Dark Fantasy",
+    template: "%s | Fantasy X",
+  },
+  description:
+    "La red social de los reinos oscuros. Comparte proclamaciones, forja alianzas y susurra en la sombra. Estilo medieval fantasy con mensajes, perfiles y mas.",
+  keywords: [
+    "red social",
+    "dark fantasy",
+    "medieval",
+    "chat",
+    "mensajes",
+    "fantasy",
+    "rpg",
+    "social network",
+  ],
+  authors: [{ name: "Fantasy X" }],
+  metadataBase: new URL(BASE_URL),
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: BASE_URL,
+    siteName: "Fantasy X",
+    title: "Fantasy X - Red Social Dark Fantasy",
+    description:
+      "La red social de los reinos oscuros. Comparte proclamaciones, forja alianzas y susurra en la sombra.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fantasy X - Red Social Dark Fantasy",
+    description:
+      "La red social de los reinos oscuros. Comparte proclamaciones, forja alianzas y susurra en la sombra.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
