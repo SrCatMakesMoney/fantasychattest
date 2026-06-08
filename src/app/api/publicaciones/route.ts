@@ -51,12 +51,17 @@ export async function POST(request: NextRequest) {
       mediaType: mediaType || "",
     });
 
-    const populated = await Post.findById(post._id).populate(
-      "author",
-      "username displayName avatar realm"
-    );
+    let populated;
+    try {
+      populated = await Post.findById(post._id).populate(
+        "author",
+        "username displayName avatar realm"
+      );
+    } catch {
+      populated = post;
+    }
 
-    return Response.json({ publicacion: populated }, { status: 201 });
+    return Response.json({ publicacion: populated || post }, { status: 201 });
   } catch (error) {
     console.error("Error al crear publicacion:", error);
     return Response.json({ error: "Error interno" }, { status: 500 });

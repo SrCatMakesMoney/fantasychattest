@@ -70,11 +70,16 @@ export async function POST(request: NextRequest) {
       content: content.trim(),
     });
 
-    const populated = await Message.findById(message._id)
-      .populate("sender", "username displayName avatar")
-      .populate("receiver", "username displayName avatar");
+    let populated;
+    try {
+      populated = await Message.findById(message._id)
+        .populate("sender", "username displayName avatar")
+        .populate("receiver", "username displayName avatar");
+    } catch {
+      populated = message;
+    }
 
-    return Response.json({ mensaje: populated }, { status: 201 });
+    return Response.json({ mensaje: populated || message }, { status: 201 });
   } catch (error) {
     console.error("Error al enviar mensaje:", error);
     return Response.json({ error: "Error interno" }, { status: 500 });

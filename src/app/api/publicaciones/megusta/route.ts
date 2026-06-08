@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Post } from "@/models/Post";
@@ -22,19 +23,22 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Publicacion no encontrada" }, { status: 404 });
     }
 
-    const userIdStr = session.userId;
+    const userId = new mongoose.Types.ObjectId(session.userId);
     const alreadyLiked = post.likes.some(
-      (id) => id.toString() === userIdStr
+      (id) => id.toString() === session.userId
     );
 
     if (alreadyLiked) {
-      post.likes = post.likes.filter((id) => id.toString() !== userIdStr);
+      await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
     } else {
-      post.likes.push(session.userId as unknown as import("mongoose").Types.ObjectId);
+      await Post.updateOne({ _id: postId }, { $addToSet: { likes: userId } });
     }
 
-    await post.save();
-    return Response.json({ likes: post.likes.length, liked: !alreadyLiked });
+    const updated = await Post.findById(postId);
+    return Response.json({
+      likes: updated?.likes.length ?? 0,
+      liked: !alreadyLiked,
+    });
   } catch (error) {
     console.error("Error en megusta:", error);
     return Response.json({ error: "Error interno" }, { status: 500 });

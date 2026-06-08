@@ -49,12 +49,17 @@ export async function POST(request: NextRequest) {
       content: content.trim(),
     });
 
-    const populated = await Comment.findById(comment._id).populate(
-      "author",
-      "username displayName avatar realm"
-    );
+    let populated;
+    try {
+      populated = await Comment.findById(comment._id).populate(
+        "author",
+        "username displayName avatar realm"
+      );
+    } catch {
+      populated = comment;
+    }
 
-    return Response.json({ comentario: populated }, { status: 201 });
+    return Response.json({ comentario: populated || comment }, { status: 201 });
   } catch (error) {
     console.error("Error al crear comentario:", error);
     return Response.json({ error: "Error interno" }, { status: 500 });
