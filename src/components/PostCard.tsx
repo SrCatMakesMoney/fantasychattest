@@ -114,9 +114,18 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
   return (
     <div className="castle-card p-5 mb-4 fade-in">
       <div className="flex items-start gap-4">
-        <div className="w-11 h-11 fantasy-avatar flex-shrink-0 text-sm">
-          {initial}
-        </div>
+        {post.author.avatar ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={post.author.avatar}
+            alt={post.author.displayName}
+            className="w-11 h-11 rounded-full border-2 border-[var(--color-accent-gold)] object-cover flex-shrink-0 shadow-[0_0_8px_rgba(232,184,48,0.3)]"
+          />
+        ) : (
+          <div className="w-11 h-11 fantasy-avatar flex-shrink-0 text-sm">
+            {initial}
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="fantasy-title text-[var(--color-accent-gold)] text-sm">
@@ -210,9 +219,18 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
                 const cInitial = c.author.displayName?.[0]?.toUpperCase() || "?";
                 return (
                   <div key={c._id} className="flex items-start gap-3 mb-3">
-                    <div className="w-7 h-7 fantasy-avatar flex-shrink-0 text-[10px]">
-                      {cInitial}
-                    </div>
+                    {c.author.avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={c.author.avatar}
+                        alt={c.author.displayName}
+                        className="w-7 h-7 rounded-full border border-[var(--color-accent-gold)] object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-7 h-7 fantasy-avatar flex-shrink-0 text-[10px]">
+                        {cInitial}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="fantasy-title text-[var(--color-accent-gold)] text-xs">

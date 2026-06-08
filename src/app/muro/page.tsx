@@ -38,16 +38,21 @@ export default function MuroPage() {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("/api/auth/me");
-      if (!res.ok) {
-        router.push("/login");
-        return;
+      try {
+        const res = await fetch("/api/auth/me");
+        if (!res.ok) {
+          router.push("/login");
+          return;
+        }
+        const data = await res.json();
+        setUser(data.user);
+      } finally {
+        setAuthChecked(true);
       }
-      const data = await res.json();
-      setUser(data.user);
     };
     fetchUser();
   }, [router]);
@@ -65,10 +70,11 @@ export default function MuroPage() {
   }, []);
 
   useEffect(() => {
+    if (!authChecked || !user) return;
     fetchPosts();
     const interval = setInterval(fetchPosts, 10000);
     return () => clearInterval(interval);
-  }, [fetchPosts]);
+  }, [authChecked, user, fetchPosts]);
 
   const handleMessageUser = (userId: string) => {
     router.push(`/mensajes?con=${userId}`);

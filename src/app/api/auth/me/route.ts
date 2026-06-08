@@ -23,6 +23,7 @@ export async function GET() {
         username: user.username,
         displayName: user.displayName,
         avatar: user.avatar,
+        banner: user.banner,
         bio: user.bio,
         realm: user.realm,
       },
@@ -42,7 +43,7 @@ export async function PATCH(request: NextRequest) {
 
     await connectDB();
     const body = await request.json();
-    const { displayName, bio, realm, avatar } = body;
+    const { displayName, bio, realm, avatar, banner } = body;
 
     const updates: Record<string, string> = {};
     if (displayName !== undefined && displayName.trim().length > 0) {
@@ -56,6 +57,9 @@ export async function PATCH(request: NextRequest) {
     }
     if (avatar !== undefined) {
       updates.avatar = avatar.trim();
+    }
+    if (banner !== undefined) {
+      updates.banner = banner.trim();
     }
 
     if (Object.keys(updates).length === 0) {
@@ -76,6 +80,7 @@ export async function PATCH(request: NextRequest) {
         username: user.username,
         displayName: user.displayName,
         avatar: user.avatar,
+        banner: user.banner,
         bio: user.bio,
         realm: user.realm,
       },

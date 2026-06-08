@@ -5,6 +5,7 @@ export interface IUser extends Document {
   displayName: string;
   password: string;
   avatar: string;
+  banner: string;
   bio: string;
   realm: string;
   createdAt: Date;
@@ -16,6 +17,7 @@ const UserSchema = new Schema<IUser>(
     displayName: { type: String, required: true },
     password: { type: String, required: true },
     avatar: { type: String, default: "" },
+    banner: { type: String, default: "" },
     bio: { type: String, default: "Un viajero de los reinos oscuros..." },
     realm: { type: String, default: "Fortaleza de Sombras" },
   },
