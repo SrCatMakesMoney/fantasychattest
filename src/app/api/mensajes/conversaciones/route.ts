@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import { Message } from "@/models/Message";
 import { getSession } from "@/lib/auth";
@@ -11,12 +12,14 @@ export async function GET() {
 
     await connectDB();
 
+    const userId = new mongoose.Types.ObjectId(session.userId);
+
     const conversations = await Message.aggregate([
       {
         $match: {
           $or: [
-            { sender: session.userId },
-            { receiver: session.userId },
+            { sender: userId },
+            { receiver: userId },
           ],
         },
       },
@@ -25,7 +28,7 @@ export async function GET() {
         $group: {
           _id: {
             $cond: [
-              { $eq: ["$sender", session.userId] },
+              { $eq: ["$sender", userId] },
               "$receiver",
               "$sender",
             ],
@@ -37,7 +40,7 @@ export async function GET() {
               $cond: [
                 {
                   $and: [
-                    { $eq: ["$receiver", session.userId] },
+                    { $eq: ["$receiver", userId] },
                     { $eq: ["$read", false] },
                   ],
                 },

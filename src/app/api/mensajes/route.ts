@@ -70,10 +70,9 @@ export async function POST(request: NextRequest) {
       content: content.trim(),
     });
 
-    const populated = await message.populate([
-      { path: "sender", select: "username displayName avatar" },
-      { path: "receiver", select: "username displayName avatar" },
-    ]);
+    const populated = await Message.findById(message._id)
+      .populate("sender", "username displayName avatar")
+      .populate("receiver", "username displayName avatar");
 
     return Response.json({ mensaje: populated }, { status: 201 });
   } catch (error) {
