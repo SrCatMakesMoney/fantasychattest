@@ -239,4 +239,87 @@
     background: #000;
     overflow: hidden;
   }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+
+  .ornament::before,
+  .ornament::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-border-glow),
+      transparent
+    );
+  }
+
+  .ornament-diamond::before {
+    content: "\25C6";
+    color: var(--color-accent-gold);
+    font-size: 8px;
+  }
+
+  @keyframes torch-flicker {
+    0%, 100% { opacity: 0.7; filter: brightness(1); }
+    25% { opacity: 0.85; filter: brightness(1.1); }
+    50% { opacity: 1; filter: brightness(1.2); }
+    75% { opacity: 0.9; filter: brightness(1.05); }
+  }
+
+  .torch-glow {
+    animation: torch-flicker 3s ease-in-out infinite;
+  }
+
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide-up {
+    animation: slide-up 0.6s ease-out;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 3px;
+    color: var(--color-text-secondary);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-family-body);
+    font-size: 14px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--color-border-glow);
+    color: var(--color-text-primary);
+    background: rgba(112, 64, 176, 0.1);
+  }
+
+  .vignette::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 50%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  ::selection {
+    background: rgba(144, 80, 208, 0.4);
+    color: var(--color-accent-gold);
+  }
 }

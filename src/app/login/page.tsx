@@ -44,96 +44,114 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="castle-card p-10 w-full max-w-md fade-in">
-        <div className="text-center mb-10">
-          <h1 className="fantasy-title glow-text text-3xl mb-2">
-            Fantasy X
-          </h1>
-          <div className="fantasy-divider my-4" />
-          <p className="text-[var(--color-text-secondary)] text-sm italic">
-            Entra al Reino Oscuro
+    <div className="min-h-screen flex items-center justify-center p-4 vignette">
+      <div className="w-full max-w-md slide-up">
+        {/* Ornamental header */}
+        <div className="text-center mb-8">
+          <div className="torch-glow inline-block">
+            <h1 className="fantasy-title glow-text text-4xl tracking-wide">
+              Fantasy X
+            </h1>
+          </div>
+          <div className="ornament mt-4">
+            <span className="ornament-diamond" />
+          </div>
+          <p className="text-[var(--color-text-secondary)] mt-3 italic text-lg">
+            Las puertas del reino se abren ante ti
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-[var(--color-accent-gold)] fantasy-title text-xs mb-2 tracking-wider">
-              Usuario
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="input-fantasy"
-              placeholder="guerrero_oscuro"
-              required
-            />
-          </div>
+        <div className="castle-card p-8">
+          <h2 className="fantasy-title text-[var(--color-accent-gold)] text-center text-sm tracking-widest mb-6">
+            {isRegister ? "Forjar un Alma Nueva" : "Entrar al Castillo"}
+          </h2>
 
-          {isRegister && (
-            <div className="fade-in">
-              <label className="block text-[var(--color-accent-gold)] fantasy-title text-xs mb-2 tracking-wider">
-                Nombre
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-[var(--color-text-secondary)] fantasy-title text-[10px] mb-2 tracking-wider uppercase">
+                Usuario
               </label>
               <input
                 type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="input-fantasy"
-                placeholder="El Guerrero Oscuro"
+                placeholder="guerrero_oscuro"
                 required
               />
             </div>
-          )}
 
-          <div>
-            <label className="block text-[var(--color-accent-gold)] fantasy-title text-xs mb-2 tracking-wider">
-              Contrasena
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-fantasy"
-              placeholder="********"
-              required
-            />
+            {isRegister && (
+              <div className="fade-in">
+                <label className="block text-[var(--color-text-secondary)] fantasy-title text-[10px] mb-2 tracking-wider uppercase">
+                  Nombre de Guerrero
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  className="input-fantasy"
+                  placeholder="El Caballero de las Sombras"
+                  required
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-[var(--color-text-secondary)] fantasy-title text-[10px] mb-2 tracking-wider uppercase">
+                Palabra Secreta
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-fantasy"
+                placeholder="********"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="text-[var(--color-accent-red)] text-sm text-center fade-in border border-[var(--color-accent-red)] rounded p-3 bg-[rgba(208,64,64,0.08)]">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-fantasy w-full py-3 text-sm"
+            >
+              {loading
+                ? "Abriendo las puertas..."
+                : isRegister
+                ? "Forjar Alma"
+                : "Entrar"}
+            </button>
+          </form>
+
+          <div className="ornament mt-8 mb-4">
+            <span className="ornament-diamond" />
           </div>
 
-          {error && (
-            <div className="text-[var(--color-accent-red)] text-sm text-center fade-in border border-[var(--color-accent-red)] rounded p-3 bg-[rgba(208,64,64,0.1)]">
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-fantasy w-full py-3"
-          >
-            {loading
-              ? "Abriendo las puertas..."
-              : isRegister
-              ? "Crear Alma"
-              : "Entrar al Castillo"}
-          </button>
-        </form>
-
-        <div className="mt-8 text-center">
-          <div className="fantasy-divider mb-5" />
-          <button
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setError("");
-            }}
-            className="text-[var(--color-text-secondary)] text-sm hover:text-[var(--color-accent-gold)] transition-colors"
-          >
-            {isRegister
-              ? "Ya tienes alma? Entra aqui"
-              : "Nuevo en el reino? Crea tu alma"}
-          </button>
+          <div className="text-center">
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError("");
+              }}
+              className="text-[var(--color-text-muted)] text-sm hover:text-[var(--color-accent-gold)] transition-colors italic"
+            >
+              {isRegister
+                ? "Ya tienes alma? Entra al castillo"
+                : "Sin alma aun? Forja una nueva"}
+            </button>
+          </div>
         </div>
+
+        <p className="text-center text-[var(--color-text-muted)] text-xs mt-6 italic opacity-50">
+          Solo los valientes cruzan estas puertas
+        </p>
       </div>
     </div>
   );

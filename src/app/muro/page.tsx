@@ -95,7 +95,9 @@ export default function MuroPage() {
           <p className="text-[var(--color-text-muted)] text-sm italic">
             Proclamaciones de las tierras oscuras
           </p>
-          <hr className="fantasy-divider mt-4" />
+          <div className="ornament mt-4">
+            <span className="ornament-diamond" />
+          </div>
         </div>
 
         <CreatePost onPostCreated={fetchPosts} />
