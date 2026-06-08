@@ -62,14 +62,16 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         body: JSON.stringify({ content, mediaUrl, mediaType }),
       });
 
-      if (res.ok) {
+      if (res.status === 201 || res.ok) {
         setContent("");
         setMediaUrl("");
         setMediaType("");
         if (fileInputRef.current) fileInputRef.current.value = "";
+        setLoading(false);
         onPostCreated();
+        return;
       } else {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({ error: "Error desconocido" }));
         setError(data.error || "No se pudo publicar");
       }
     } catch {

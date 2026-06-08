@@ -46,9 +46,10 @@ export default function MuroPage() {
       if (res.ok) {
         const data = await res.json();
         setPosts(data.publicaciones);
-        setLoadingPosts(false);
       }
     } catch {
+      // network error, keep existing posts
+    } finally {
       setLoadingPosts(false);
     }
   }, []);
@@ -76,6 +77,11 @@ export default function MuroPage() {
     fetchPosts();
     const interval = setInterval(fetchPosts, 10000);
     return () => clearInterval(interval);
+  }, [fetchPosts]);
+
+  const handlePostCreated = useCallback(async () => {
+    await fetchPosts();
+    setTimeout(fetchPosts, 1500);
   }, [fetchPosts]);
 
   const handleMessageUser = (userId: string) => {
@@ -108,7 +114,7 @@ export default function MuroPage() {
           </div>
         </div>
 
-        <CreatePost onPostCreated={fetchPosts} />
+        <CreatePost onPostCreated={handlePostCreated} />
 
         {loadingPosts ? (
           <div className="text-center py-12">
