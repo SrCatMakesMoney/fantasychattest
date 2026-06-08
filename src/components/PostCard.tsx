@@ -92,9 +92,8 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
         body: JSON.stringify({ postId: post._id, content: commentText }),
       });
       if (res.ok) {
-        const data = await res.json();
-        setComments([...comments, data.comentario]);
         setCommentText("");
+        await fetchComments();
       }
     } finally {
       setCommentLoading(false);

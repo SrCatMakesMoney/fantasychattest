@@ -46,8 +46,9 @@ export default function MuroPage() {
       if (res.ok) {
         const data = await res.json();
         setPosts(data.publicaciones);
+        setLoadingPosts(false);
       }
-    } finally {
+    } catch {
       setLoadingPosts(false);
     }
   }, []);
