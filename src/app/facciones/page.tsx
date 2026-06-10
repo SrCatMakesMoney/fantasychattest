@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import FactionChat from "@/components/FactionChat";
 
 interface Member {
   _id: string;
@@ -238,6 +239,9 @@ export default function FaccionesPage() {
             )}
           </div>
         )}
+
+        {/* Chat de mi faccion */}
+        {mia && <FactionChat userId={userId} factionName={mia.name} />}
 
         {/* Lista */}
         {facciones.length === 0 ? (
