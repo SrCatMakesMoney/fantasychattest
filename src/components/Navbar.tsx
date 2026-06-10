@@ -68,6 +68,28 @@ export default function Navbar() {
       badge: 0,
     },
     {
+      href: "/taberna",
+      label: "Taberna",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M5 3h8v3a4 4 0 0 1-8 0V3z" />
+          <path d="M13 4h2a1 1 0 0 1 1 1v1a2 2 0 0 1-2 2h-1M7 10v4M11 10v4M5 15h8" />
+        </svg>
+      ),
+      badge: 0,
+    },
+    {
+      href: "/mercado",
+      label: "Mercado",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M3 6h12l-1 9H4L3 6z" />
+          <path d="M6 6V4a3 3 0 0 1 6 0v2" />
+        </svg>
+      ),
+      badge: 0,
+    },
+    {
       href: "/mensajes",
       label: "Mensajes",
       icon: (

@@ -16,6 +16,7 @@ interface User {
   bio: string;
   realm: string;
   badges?: string[];
+  cosmeticos?: { marco?: string; titulo?: string; colorNombre?: string };
 }
 
 const REALMS = [
@@ -63,6 +64,9 @@ export default function PerfilPage() {
         const statsData = await statsRes.json();
         setStats(statsData.stats);
         setXp(statsData.xp || 0);
+        setUser((u) =>
+          u ? { ...u, cosmeticos: statsData.usuario?.cosmeticos } : u
+        );
       }
     };
     fetchUser();
@@ -217,10 +221,10 @@ export default function PerfilPage() {
                   <img
                     src={user.avatar}
                     alt={user.displayName}
-                    className="w-24 h-24 rounded-full border-4 border-[var(--color-bg-card)] object-cover shadow-lg"
+                    className={`w-24 h-24 rounded-full border-4 border-[var(--color-bg-card)] object-cover shadow-lg ${user.cosmeticos?.marco || ""}`}
                   />
                 ) : (
-                  <div className="w-24 h-24 fantasy-avatar text-2xl border-4 border-[var(--color-bg-card)] shadow-lg">
+                  <div className={`w-24 h-24 fantasy-avatar text-2xl border-4 border-[var(--color-bg-card)] shadow-lg ${user.cosmeticos?.marco || ""}`}>
                     {initial}
                   </div>
                 )}
@@ -269,13 +273,20 @@ export default function PerfilPage() {
                   </div>
                 ) : (
                   <>
-                    <h1 className="fantasy-title glow-text text-xl truncate">
+                    <h1
+                      className="fantasy-title glow-text text-xl truncate"
+                      style={
+                        user.cosmeticos?.colorNombre
+                          ? { color: user.cosmeticos.colorNombre }
+                          : undefined
+                      }
+                    >
                       {user.displayName}
                     </h1>
                     <p className="text-[var(--color-text-muted)] text-sm">
                       @{user.username} ·{" "}
                       <span className="text-[var(--color-accent-purple)]">
-                        {titleForLevel(progreso.level)}
+                        {user.cosmeticos?.titulo || titleForLevel(progreso.level)}
                       </span>
                     </p>
                   </>

@@ -10,6 +10,13 @@ export interface IUser extends Document {
   realm: string;
   badges: string[];
   faction: mongoose.Types.ObjectId | null;
+  oroGastado: number;
+  cosmeticosDesbloqueados: string[];
+  cosmeticos: {
+    marco: string;
+    titulo: string;
+    colorNombre: string;
+  };
   createdAt: Date;
 }
 
@@ -24,6 +31,13 @@ const UserSchema = new Schema<IUser>(
     realm: { type: String, default: "Fortaleza de Sombras" },
     badges: { type: [String], default: [] },
     faction: { type: Schema.Types.ObjectId, ref: "Faction", default: null },
+    oroGastado: { type: Number, default: 0 },
+    cosmeticosDesbloqueados: { type: [String], default: [] },
+    cosmeticos: {
+      marco: { type: String, default: "" },
+      titulo: { type: String, default: "" },
+      colorNombre: { type: String, default: "" },
+    },
   },
   { timestamps: true, autoIndex: true }
 );

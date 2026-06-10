@@ -16,6 +16,7 @@ interface UserProfile {
   bio: string;
   realm: string;
   badges?: string[];
+  cosmeticos?: { marco?: string; titulo?: string; colorNombre?: string };
   createdAt: string;
 }
 
@@ -160,10 +161,10 @@ function UsuarioContent() {
                   <img
                     src={profile.avatar}
                     alt={profile.displayName}
-                    className="w-20 h-20 rounded-full border-4 border-[var(--color-bg-card)] object-cover shadow-lg"
+                    className={`w-20 h-20 rounded-full border-4 border-[var(--color-bg-card)] object-cover shadow-lg ${profile.cosmeticos?.marco || ""}`}
                   />
                 ) : (
-                  <div className="w-20 h-20 fantasy-avatar text-xl border-4 border-[var(--color-bg-card)] shadow-lg">
+                  <div className={`w-20 h-20 fantasy-avatar text-xl border-4 border-[var(--color-bg-card)] shadow-lg ${profile.cosmeticos?.marco || ""}`}>
                     {initial}
                   </div>
                 )}
@@ -172,13 +173,20 @@ function UsuarioContent() {
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <h1 className="fantasy-title glow-text text-xl truncate">
+                <h1
+                  className="fantasy-title glow-text text-xl truncate"
+                  style={
+                    profile.cosmeticos?.colorNombre
+                      ? { color: profile.cosmeticos.colorNombre }
+                      : undefined
+                  }
+                >
                   {profile.displayName}
                 </h1>
                 <p className="text-[var(--color-text-muted)] text-sm">
                   @{profile.username} ·{" "}
                   <span className="text-[var(--color-accent-purple)]">
-                    {titleForLevel(progreso.level)}
+                    {profile.cosmeticos?.titulo || titleForLevel(progreso.level)}
                   </span>
                 </p>
               </div>

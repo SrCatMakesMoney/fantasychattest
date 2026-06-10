@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
+      .populate({ path: "author", select: "username displayName avatar realm badges faction cosmeticos", populate: { path: "faction", select: "name emblem" } });
 
     return Response.json({ publicaciones: posts });
   } catch (error) {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     let populated;
     try {
-      populated = await Post.findById(post._id).populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
+      populated = await Post.findById(post._id).populate({ path: "author", select: "username displayName avatar realm badges faction cosmeticos", populate: { path: "faction", select: "name emblem" } });
     } catch {
       populated = post;
     }

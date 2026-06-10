@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const comments = await Comment.find({ post: postId })
       .sort({ createdAt: 1 })
       .limit(50)
-      .populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
+      .populate({ path: "author", select: "username displayName avatar realm badges faction cosmeticos", populate: { path: "faction", select: "name emblem" } });
 
     return Response.json({ comentarios: comments });
   } catch (error) {
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     let populated;
     try {
-      populated = await Comment.findById(comment._id).populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
+      populated = await Comment.findById(comment._id).populate({ path: "author", select: "username displayName avatar realm badges faction cosmeticos", populate: { path: "faction", select: "name emblem" } });
     } catch {
       populated = comment;
     }
