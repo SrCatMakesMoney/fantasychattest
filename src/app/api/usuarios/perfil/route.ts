@@ -3,7 +3,9 @@ import { connectDB } from "@/lib/mongodb";
 import "@/models/Faction";
 import { User } from "@/models/User";
 import { Post } from "@/models/Post";
+import { Comment } from "@/models/Comment";
 import { getSession } from "@/lib/auth";
+import { computeXp } from "@/lib/nivel";
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,6 +34,26 @@ export async function GET(request: NextRequest) {
 
     const postCount = await Post.countDocuments({ author: userId });
 
+    const [likeStats, commentCount] = await Promise.all([
+      Post.aggregate([
+        { $match: { author: user._id } },
+        {
+          $group: {
+            _id: null,
+            likes: { $sum: { $size: { $ifNull: ["$likes", []] } } },
+          },
+        },
+      ]),
+      Comment.countDocuments({ author: userId }),
+    ]);
+    const likesReceived = likeStats[0]?.likes || 0;
+    const stats = {
+      posts: postCount,
+      likesReceived,
+      comments: commentCount,
+      badges: (user.badges || []).length,
+    };
+
     return Response.json({
       usuario: {
         id: user._id,
@@ -46,6 +68,8 @@ export async function GET(request: NextRequest) {
       },
       publicaciones: posts,
       totalPublicaciones: postCount,
+      stats,
+      xp: computeXp(stats),
     });
   } catch (error) {
     console.error("Error al obtener perfil:", error);

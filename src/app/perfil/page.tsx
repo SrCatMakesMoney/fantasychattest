@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { uploadMedia, isCloudinaryConfigured } from "@/lib/cloudinary";
 import { getBadge } from "@/lib/badges";
+import { levelProgress, titleForLevel, UserStats } from "@/lib/nivel";
 
 interface User {
   id: string;
@@ -41,6 +42,8 @@ export default function PerfilPage() {
   const [saveMsg, setSaveMsg] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [xp, setXp] = useState(0);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,6 +58,12 @@ export default function PerfilPage() {
       }
       const data = await res.json();
       setUser(data.user);
+      const statsRes = await fetch(`/api/usuarios/perfil?id=${data.user.id}`);
+      if (statsRes.ok) {
+        const statsData = await statsRes.json();
+        setStats(statsData.stats);
+        setXp(statsData.xp || 0);
+      }
     };
     fetchUser();
   }, [router]);
@@ -148,12 +157,17 @@ export default function PerfilPage() {
   }
 
   const initial = user.displayName?.[0]?.toUpperCase() || "?";
+  const progreso = levelProgress(xp);
 
   return (
     <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-6">
-        <div className="castle-card fade-in overflow-hidden">
+        <div className="castle-card rpg-panel fade-in overflow-hidden">
+          <span className="rpg-corner rpg-corner-tl" />
+          <span className="rpg-corner rpg-corner-tr" />
+          <span className="rpg-corner rpg-corner-bl" />
+          <span className="rpg-corner rpg-corner-br" />
           {/* Banner */}
           <div className="relative h-40 sm:h-52 bg-gradient-to-br from-[#1a1030] via-[#2a1845] to-[#0f0a1a] overflow-hidden">
             {user.banner ? (
@@ -210,6 +224,9 @@ export default function PerfilPage() {
                     {initial}
                   </div>
                 )}
+                <div className="level-badge" title={`Nivel ${progreso.level}`}>
+                  <span>{progreso.level}</span>
+                </div>
                 {cloudinaryReady && (
                   <>
                     <input
@@ -256,7 +273,10 @@ export default function PerfilPage() {
                       {user.displayName}
                     </h1>
                     <p className="text-[var(--color-text-muted)] text-sm">
-                      @{user.username}
+                      @{user.username} ·{" "}
+                      <span className="text-[var(--color-accent-purple)]">
+                        {titleForLevel(progreso.level)}
+                      </span>
                     </p>
                   </>
                 )}
@@ -266,6 +286,24 @@ export default function PerfilPage() {
                   Editar
                 </button>
               )}
+            </div>
+
+            {/* XP */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-1">
+                <span className="fantasy-title text-[var(--color-accent-gold)] text-[10px] tracking-widest uppercase">
+                  Nivel {progreso.level}
+                </span>
+                <span className="text-[var(--color-text-muted)] text-xs">
+                  {progreso.current} / {progreso.needed} XP
+                </span>
+              </div>
+              <div className="rpg-bar">
+                <div
+                  className="rpg-bar-fill"
+                  style={{ width: `${progreso.percent}%` }}
+                />
+              </div>
             </div>
 
             <hr className="fantasy-divider mb-6" />
@@ -373,25 +411,23 @@ export default function PerfilPage() {
             )}
 
             {/* Stats */}
-            {!editing && (
-              <div className="mt-8 grid grid-cols-3 gap-3">
-                <div className="text-center castle-card p-4">
-                  <div className="text-[var(--color-accent-gold)] fantasy-title text-lg">
-                    &infin;
-                  </div>
-                  <div className="text-[var(--color-text-muted)] text-xs mt-1">Poder</div>
+            {!editing && stats && (
+              <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{stats.posts}</span>
+                  <span className="rpg-stat-label">Proclamas</span>
                 </div>
-                <div className="text-center castle-card p-4">
-                  <div className="text-[var(--color-accent-purple)] fantasy-title text-lg">
-                    &dagger;
-                  </div>
-                  <div className="text-[var(--color-text-muted)] text-xs mt-1">Guerrero</div>
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{stats.likesReceived}</span>
+                  <span className="rpg-stat-label">Tributos</span>
                 </div>
-                <div className="text-center castle-card p-4">
-                  <div className="text-[var(--color-accent-red)] fantasy-title text-lg">
-                    &sect;
-                  </div>
-                  <div className="text-[var(--color-text-muted)] text-xs mt-1">Guardian</div>
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{stats.comments}</span>
+                  <span className="rpg-stat-label">Ecos</span>
+                </div>
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{stats.badges}</span>
+                  <span className="rpg-stat-label">Insignias</span>
                 </div>
               </div>
             )}

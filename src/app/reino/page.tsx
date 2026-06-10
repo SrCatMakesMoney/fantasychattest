@@ -158,7 +158,11 @@ export default function ReinoPage() {
 
         {/* Rey actual */}
         {reinado ? (
-          <div className="castle-card p-6 mb-6 text-center border-[var(--color-accent-gold)]">
+          <div className="castle-card rpg-panel p-6 mb-6 text-center border-[var(--color-accent-gold)]">
+            <span className="rpg-corner rpg-corner-tl" />
+            <span className="rpg-corner rpg-corner-tr" />
+            <span className="rpg-corner rpg-corner-bl" />
+            <span className="rpg-corner rpg-corner-br" />
             <p className="fantasy-title text-[var(--color-accent-gold)] text-xs tracking-widest mb-3">
               ♛ SOBERANO DE LA SEMANA · {reinado.weekKey}
             </p>
