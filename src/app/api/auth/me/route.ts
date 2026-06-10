@@ -26,6 +26,7 @@ export async function GET() {
         banner: user.banner,
         bio: user.bio,
         realm: user.realm,
+        badges: user.badges || [],
       },
     });
   } catch (error) {
@@ -83,6 +84,7 @@ export async function PATCH(request: NextRequest) {
         banner: user.banner,
         bio: user.bio,
         realm: user.realm,
+        badges: user.badges || [],
       },
     });
   } catch (error) {

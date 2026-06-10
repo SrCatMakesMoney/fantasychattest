@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import PostCard from "@/components/PostCard";
+import { getBadge } from "@/lib/badges";
 
 interface UserProfile {
   id: string;
@@ -13,6 +14,7 @@ interface UserProfile {
   banner: string;
   bio: string;
   realm: string;
+  badges?: string[];
   createdAt: string;
 }
 
@@ -172,6 +174,24 @@ function UsuarioContent() {
 
             {profile.realm && (
               <span className="realm-badge mb-3 inline-block">{profile.realm}</span>
+            )}
+
+            {profile.badges && profile.badges.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {profile.badges.map((badgeId) => {
+                  const badge = getBadge(badgeId);
+                  if (!badge) return null;
+                  return (
+                    <span
+                      key={badgeId}
+                      title={badge.description}
+                      className="realm-badge cursor-help"
+                    >
+                      {badge.icon} {badge.name}
+                    </span>
+                  );
+                })}
+              </div>
             )}
 
             {profile.bio && (

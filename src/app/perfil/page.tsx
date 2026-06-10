@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { uploadMedia, isCloudinaryConfigured } from "@/lib/cloudinary";
+import { getBadge } from "@/lib/badges";
 
 interface User {
   id: string;
@@ -13,6 +14,7 @@ interface User {
   banner: string;
   bio: string;
   realm: string;
+  badges?: string[];
 }
 
 const REALMS = [
@@ -301,6 +303,29 @@ export default function PerfilPage() {
                 <span className="realm-badge">{user.realm}</span>
               )}
             </div>
+
+            {user.badges && user.badges.length > 0 && (
+              <div className="mb-6">
+                <label className="block text-[var(--color-text-secondary)] fantasy-title text-[9px] mb-2 tracking-wider uppercase">
+                  Insignias
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {user.badges.map((badgeId) => {
+                    const badge = getBadge(badgeId);
+                    if (!badge) return null;
+                    return (
+                      <span
+                        key={badgeId}
+                        title={badge.description}
+                        className="realm-badge cursor-help"
+                      >
+                        {badge.icon} {badge.name}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Bio */}
             <div className="mb-6">

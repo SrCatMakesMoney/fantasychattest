@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const posts = await Post.find({ author: userId })
       .sort({ createdAt: -1 })
       .limit(20)
-      .populate("author", "username displayName avatar realm");
+      .populate("author", "username displayName avatar realm badges");
 
     const postCount = await Post.countDocuments({ author: userId });
 
@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
         banner: user.banner,
         bio: user.bio,
         realm: user.realm,
+        badges: user.badges || [],
         createdAt: user.createdAt,
       },
       publicaciones: posts,

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { getBadge } from "@/lib/badges";
 
 interface PostAuthor {
   _id: string;
@@ -9,6 +10,7 @@ interface PostAuthor {
   displayName: string;
   avatar: string;
   realm: string;
+  badges?: string[];
 }
 
 interface CommentData {
@@ -25,6 +27,7 @@ interface Post {
   mediaUrl: string;
   mediaType: "image" | "video" | "audio" | "";
   likes: string[];
+  eventType?: "" | "evento" | "decreto" | "coronacion";
   createdAt: string;
 }
 
@@ -112,8 +115,26 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
 
   const initial = post.author.displayName?.[0]?.toUpperCase() || "?";
 
+  const eventLabel =
+    post.eventType === "decreto"
+      ? "\ud83d\udcdc Decreto Real"
+      : post.eventType === "coronacion"
+      ? "\ud83d\udc51 Coronaci\u00f3n"
+      : post.eventType === "evento"
+      ? "\u2694 Evento del Reino"
+      : null;
+
   return (
-    <div className="castle-card p-5 mb-4 fade-in">
+    <div
+      className={`castle-card p-5 mb-4 fade-in ${
+        eventLabel ? "border-[var(--color-accent-gold)]" : ""
+      }`}
+    >
+      {eventLabel && (
+        <p className="fantasy-title text-[var(--color-accent-gold)] text-[10px] tracking-widest mb-3">
+          {eventLabel}
+        </p>
+      )}
       <div className="flex items-start gap-4">
         <button
           onClick={() => router.push(`/usuario?id=${post.author._id}`)}
@@ -149,6 +170,19 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
             <span className="text-[var(--color-text-muted)] text-xs">
               {timeAgoLabel}
             </span>
+            {post.author.badges?.map((badgeId) => {
+              const badge = getBadge(badgeId);
+              if (!badge) return null;
+              return (
+                <span
+                  key={badgeId}
+                  title={`${badge.name}: ${badge.description}`}
+                  className="text-sm cursor-help"
+                >
+                  {badge.icon}
+                </span>
+              );
+            })}
           </div>
           {post.author.realm && (
             <span className="realm-badge mt-1 inline-block">
