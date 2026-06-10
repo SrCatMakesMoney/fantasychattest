@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import PostCard from "@/components/PostCard";
 import { BADGES } from "@/lib/badges";
 
 interface RealmUser {
@@ -21,12 +22,38 @@ interface Reinado {
   crownedAt: string;
 }
 
+interface EventPost {
+  _id: string;
+  author: RealmUser & { realm: string };
+  content: string;
+  mediaUrl: string;
+  mediaType: "image" | "video" | "audio" | "";
+  likes: string[];
+  eventType?: "" | "evento" | "decreto" | "coronacion";
+  createdAt: string;
+}
+
+interface EventFaction {
+  _id: string;
+  name: string;
+  emblem: string;
+}
+
 interface Evento {
   _id: string;
-  type: "coronacion" | "plaga" | "festin" | "batalla" | "profecia" | "decreto";
+  type:
+    | "coronacion"
+    | "plaga"
+    | "festin"
+    | "batalla"
+    | "profecia"
+    | "decreto"
+    | "guerra";
   title: string;
   description: string;
   involvedUsers: RealmUser[];
+  factions?: EventFaction[];
+  post?: EventPost | null;
   createdAt: string;
 }
 
@@ -37,6 +64,7 @@ const EVENT_ICONS: Record<Evento["type"], string> = {
   batalla: "⚔",
   profecia: "☽",
   decreto: "✠",
+  guerra: "⛨",
 };
 
 export default function ReinoPage() {
@@ -44,6 +72,7 @@ export default function ReinoPage() {
   const [reinado, setReinado] = useState<Reinado | null>(null);
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [esRey, setEsRey] = useState(false);
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [decreto, setDecreto] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -61,6 +90,7 @@ export default function ReinoPage() {
         setReinado(data.reinado);
         setEventos(data.eventos);
         setEsRey(data.esRey);
+        setUserId(data.userId || "");
       }
     } finally {
       setLoading(false);
@@ -241,11 +271,11 @@ export default function ReinoPage() {
         ) : (
           <div className="relative pl-5 border-l border-[var(--color-border-dark)]">
             {eventos.map((ev) => (
-              <div key={ev._id} className="castle-card p-4 mb-4 fade-in relative">
+              <div key={ev._id} className="mb-4 fade-in relative">
                 <span className="absolute -left-[30px] top-4 text-sm">
                   {EVENT_ICONS[ev.type]}
                 </span>
-                <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-2 px-1">
                   <p className="fantasy-title text-[var(--color-accent-gold)] text-sm">
                     {ev.title}
                   </p>
@@ -253,22 +283,31 @@ export default function ReinoPage() {
                     {new Date(ev.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-[var(--color-text-primary)] text-sm mt-2 leading-relaxed">
-                  {ev.description}
-                </p>
-                {ev.involvedUsers.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {ev.involvedUsers.map((u) => (
-                      <button
-                        key={u._id}
-                        onClick={() => router.push(`/usuario?id=${u._id}`)}
-                        className="text-[var(--color-text-muted)] text-xs hover:text-[var(--color-accent-gold)] cursor-pointer"
-                      >
-                        @{u.username}
-                      </button>
-                    ))}
+                {ev.post && ev.post.author ? (
+                  <PostCard post={ev.post} currentUserId={userId} />
+                ) : (
+                  <div className="castle-card p-4">
+                    <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">
+                      {ev.description}
+                    </p>
                   </div>
                 )}
+                <div className="flex flex-wrap gap-2 px-1">
+                  {(ev.factions || []).map((f) => (
+                    <span key={f._id} className="realm-badge">
+                      {f.emblem} {f.name}
+                    </span>
+                  ))}
+                  {ev.involvedUsers.map((u) => (
+                    <button
+                      key={u._id}
+                      onClick={() => router.push(`/usuario?id=${u._id}`)}
+                      className="text-[var(--color-text-muted)] text-xs hover:text-[var(--color-accent-gold)] cursor-pointer"
+                    >
+                      @{u.username}
+                    </button>
+                  ))}
+                </div>
               </div>
             ))}
           </div>

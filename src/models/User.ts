@@ -9,6 +9,7 @@ export interface IUser extends Document {
   bio: string;
   realm: string;
   badges: string[];
+  faction: mongoose.Types.ObjectId | null;
   createdAt: Date;
 }
 
@@ -22,6 +23,7 @@ const UserSchema = new Schema<IUser>(
     bio: { type: String, default: "Un viajero de los reinos oscuros..." },
     realm: { type: String, default: "Fortaleza de Sombras" },
     badges: { type: [String], default: [] },
+    faction: { type: Schema.Types.ObjectId, ref: "Faction", default: null },
   },
   { timestamps: true, autoIndex: true }
 );

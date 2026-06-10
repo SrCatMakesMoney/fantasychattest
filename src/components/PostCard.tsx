@@ -11,6 +11,7 @@ interface PostAuthor {
   avatar: string;
   realm: string;
   badges?: string[];
+  faction?: { _id: string; name: string; emblem: string } | null;
 }
 
 interface CommentData {
@@ -170,6 +171,14 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
             <span className="text-[var(--color-text-muted)] text-xs">
               {timeAgoLabel}
             </span>
+            {post.author.faction && (
+              <span
+                title={`Facción: ${post.author.faction.name}`}
+                className="realm-badge cursor-help"
+              >
+                {post.author.faction.emblem} {post.author.faction.name}
+              </span>
+            )}
             {post.author.badges?.map((badgeId) => {
               const badge = getBadge(badgeId);
               if (!badge) return null;
