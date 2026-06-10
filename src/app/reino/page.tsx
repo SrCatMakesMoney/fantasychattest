@@ -31,12 +31,12 @@ interface Evento {
 }
 
 const EVENT_ICONS: Record<Evento["type"], string> = {
-  coronacion: "👑",
-  plaga: "🩸",
-  festin: "🍷",
-  batalla: "🗡",
-  profecia: "🔮",
-  decreto: "📜",
+  coronacion: "♛",
+  plaga: "☠",
+  festin: "⚜",
+  batalla: "⚔",
+  profecia: "☽",
+  decreto: "✠",
 };
 
 export default function ReinoPage() {
@@ -101,7 +101,7 @@ export default function ReinoPage() {
         <Navbar />
         <div className="flex items-center justify-center py-20">
           <p className="text-[var(--color-text-muted)] fantasy-title text-sm pulse-glow">
-            Consultando los anales del reino...
+            Desempolvando los pergaminos del reino...
           </p>
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function ReinoPage() {
         {reinado ? (
           <div className="castle-card p-6 mb-6 text-center border-[var(--color-accent-gold)]">
             <p className="fantasy-title text-[var(--color-accent-gold)] text-xs tracking-widest mb-3">
-              👑 REY DE LA SEMANA · {reinado.weekKey}
+              ♛ SOBERANO DE LA SEMANA · {reinado.weekKey}
             </p>
             <button
               onClick={() => router.push(`/usuario?id=${reinado.king._id}`)}
@@ -179,7 +179,7 @@ export default function ReinoPage() {
         {esRey && (
           <div className="castle-card p-5 mb-6 border-[var(--color-accent-gold)]">
             <p className="fantasy-title text-[var(--color-accent-gold)] text-sm mb-3">
-              📜 Emitir Decreto Real
+              ⚜ Emitir Decreto Real
             </p>
             <form onSubmit={emitirDecreto} className="flex flex-col gap-3">
               <textarea
@@ -230,7 +230,7 @@ export default function ReinoPage() {
 
         {/* Cronica */}
         <h3 className="fantasy-title text-[var(--color-accent-gold)] text-sm mb-3">
-          Anales del Reino
+          Crónicas Oscuras
         </h3>
         {eventos.length === 0 ? (
           <div className="castle-card p-8 text-center">

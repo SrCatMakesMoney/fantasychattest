@@ -137,7 +137,7 @@ export async function ensureReign(): Promise<IReign | null> {
   await awardBadge([chosen.userId], "rey");
 
   const cronista = await getCronista();
-  const content = `👑 ¡LARGA VIDA AL REY! Las campanas del castillo repican: ${chosen.displayName} ha sido coronado soberano del reino esta semana (${weekKey}). Que los súbditos rindan tributo... o conspiren en las sombras.`;
+  const content = `¡Larga vida al rey! Las campanas del castillo repican entre la niebla: ${chosen.displayName} ha sido coronado soberano de las tierras oscuras esta semana (${weekKey}). Que los súbditos rindan tributo... o conspiren en las sombras.`;
   const post = await Post.create({
     author: cronista._id,
     content,
@@ -169,7 +169,7 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     usersNeeded: 2,
     title: () => `La plaga de las sombras`,
     text: (n) =>
-      `🩸 Una plaga de sombras recorrió las aldeas del reino. ${n[0]} y ${n[1]} resistieron la enfermedad y ahora portan la marca de los supervivientes.`,
+      `Una plaga de sombras reptó por las aldeas del reino, segando almas a su paso. ${n[0]} y ${n[1]} resistieron el mal y ahora portan la marca de los supervivientes.`,
   },
   {
     type: "batalla",
@@ -177,7 +177,7 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     usersNeeded: 2,
     title: () => `Batalla en los páramos`,
     text: (n) =>
-      `🗡 Estalló una batalla en los páramos helados. ${n[0]} y ${n[1]} lucharon hombro con hombro hasta el amanecer y son nombrados veteranos del reino.`,
+      `El acero cantó en los páramos helados cuando estalló la batalla. ${n[0]} y ${n[1]} lucharon hombro con hombro hasta el alba y son nombrados veteranos del reino.`,
   },
   {
     type: "festin",
@@ -185,7 +185,7 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     usersNeeded: 2,
     title: () => `Festín en el gran salón`,
     text: (n) =>
-      `🍷 El gran salón abrió sus puertas para un festín de hidromiel y carne asada. ${n[0]} y ${n[1]} fueron invitados de honor a la mesa real.`,
+      `Las puertas del gran salón se abrieron para un festín de hidromiel y carne asada bajo candelabros de hierro. ${n[0]} y ${n[1]} ocuparon asiento de honor en la mesa real.`,
   },
   {
     type: "profecia",
@@ -193,7 +193,7 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     usersNeeded: 1,
     title: () => `La profecía del oráculo`,
     text: (n) =>
-      `🔮 El oráculo de la torre despertó de su trance y susurró un único nombre: ${n[0]}. El reino aguarda el cumplimiento de la profecía.`,
+      `El oráculo de la torre despertó de su trance milenario y susurró un único nombre: ${n[0]}. El reino aguarda, en silencio, el cumplimiento de la profecía.`,
   },
 ];
 
