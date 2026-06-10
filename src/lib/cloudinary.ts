@@ -45,6 +45,34 @@ export async function uploadImage(file: File): Promise<UploadResult> {
   return { url, type: "image", format: file.type.split("/")[1] || "" };
 }
 
+const MAX_INLINE_MEDIA_BYTES = 4 * 1024 * 1024;
+
+export async function uploadPostMedia(
+  file: File
+): Promise<{ url: string; type: "image" | "video" | "audio" }> {
+  let kind: "image" | "video" | "audio";
+  if (file.type.startsWith("image/")) kind = "image";
+  else if (file.type.startsWith("video/")) kind = "video";
+  else if (file.type.startsWith("audio/")) kind = "audio";
+  else throw new Error("Solo se permiten imagenes, videos o audios");
+
+  if (isCloudinaryConfigured()) {
+    const result = await uploadMedia(file);
+    const detected = getMediaType(result.url);
+    return { url: result.url, type: detected === "unknown" ? kind : detected };
+  }
+
+  const limit = kind === "image" ? MAX_INLINE_IMAGE_BYTES : MAX_INLINE_MEDIA_BYTES;
+  if (file.size > limit) {
+    const mb = Math.round(limit / (1024 * 1024));
+    throw new Error(
+      `Sin Cloudinary configurado, el archivo debe pesar menos de ${mb} MB`
+    );
+  }
+  const url = await fileToDataUrl(file);
+  return { url, type: kind };
+}
+
 export async function uploadMedia(file: File): Promise<UploadResult> {
   if (!CLOUD_NAME || !UPLOAD_PRESET) {
     throw new Error("Cloudinary no esta configurado");
@@ -77,6 +105,9 @@ export async function uploadMedia(file: File): Promise<UploadResult> {
 
 export function getMediaType(url: string): "image" | "video" | "audio" | "unknown" {
   const lower = url.toLowerCase();
+  if (lower.startsWith("data:image/")) return "image";
+  if (lower.startsWith("data:video/")) return "video";
+  if (lower.startsWith("data:audio/")) return "audio";
   if (/\.(jpg|jpeg|png|gif|webp|svg|bmp|avif)/.test(lower)) return "image";
   if (/\.(mp4|webm|mov|avi|mkv)/.test(lower)) return "video";
   if (/\.(mp3|wav|ogg|flac|aac|m4a)/.test(lower)) return "audio";

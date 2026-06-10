@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { uploadMedia, isCloudinaryConfigured, getMediaType } from "@/lib/cloudinary";
+import { uploadPostMedia } from "@/lib/cloudinary";
 
 interface CreatePostProps {
   onPostCreated: () => void;
@@ -16,8 +16,6 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const cloudinaryReady = isCloudinaryConfigured();
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -31,10 +29,9 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     setError("");
 
     try {
-      const result = await uploadMedia(file);
+      const result = await uploadPostMedia(file);
       setMediaUrl(result.url);
-      const detected = getMediaType(result.url);
-      setMediaType(detected === "unknown" ? "" : detected);
+      setMediaType(result.type);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al subir archivo");
     } finally {
@@ -121,30 +118,26 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
       <div className="flex items-center justify-between mt-4 gap-3">
         <div className="flex items-center gap-4">
-          {cloudinaryReady && (
-            <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,video/*,audio/*"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="text-[var(--color-text-muted)] hover:text-[var(--color-accent-gold)] transition-colors text-sm"
-                title="Adjuntar imagen, video o audio"
-              >
-                {uploading ? (
-                  <span className="pulse-glow">Subiendo...</span>
-                ) : (
-                  "Adjuntar media"
-                )}
-              </button>
-            </>
-          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*,audio/*"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-accent-gold)] transition-colors text-sm"
+            title="Adjuntar imagen, video o audio"
+          >
+            {uploading ? (
+              <span className="pulse-glow">Subiendo...</span>
+            ) : (
+              "Adjuntar media"
+            )}
+          </button>
           <span className="text-[var(--color-text-muted)] text-xs">
             {content.length}/500
           </span>
