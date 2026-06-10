@@ -54,14 +54,8 @@ interface Candidate {
   weight: number;
 }
 
-async function computeCandidates(): Promise<Candidate[]> {
+export async function computeWeeklyActivity(): Promise<Map<string, number>> {
   const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const cronista = await getCronista();
-
-  const users = await User.find({ _id: { $ne: cronista._id } }).select(
-    "displayName"
-  );
-  if (users.length === 0) return [];
 
   const [postStats, commentStats] = await Promise.all([
     Post.aggregate([
@@ -80,19 +74,37 @@ async function computeCandidates(): Promise<Candidate[]> {
     ]),
   ]);
 
-  const postMap = new Map(postStats.map((s) => [String(s._id), s]));
-  const commentMap = new Map(commentStats.map((s) => [String(s._id), s]));
+  const activity = new Map<string, number>();
+  for (const s of postStats) {
+    activity.set(
+      String(s._id),
+      (s.posts || 0) * 2 + (s.likesReceived || 0) * 3
+    );
+  }
+  for (const s of commentStats) {
+    activity.set(
+      String(s._id),
+      (activity.get(String(s._id)) || 0) + (s.comments || 0)
+    );
+  }
+  return activity;
+}
 
+async function computeCandidates(): Promise<Candidate[]> {
+  const cronista = await getCronista();
+  const users = await User.find({ _id: { $ne: cronista._id } }).select(
+    "displayName"
+  );
+  if (users.length === 0) return [];
+
+  const activity = await computeWeeklyActivity();
   return users.map((u) => {
     const id = String(u._id);
-    const p = postMap.get(id);
-    const c = commentMap.get(id);
-    const weight =
-      1 +
-      (p?.posts || 0) * 2 +
-      (p?.likesReceived || 0) * 3 +
-      (c?.comments || 0);
-    return { userId: id, displayName: u.displayName, weight };
+    return {
+      userId: id,
+      displayName: u.displayName,
+      weight: 1 + (activity.get(id) || 0),
+    };
   });
 }
 

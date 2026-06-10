@@ -58,6 +58,16 @@ export default function Navbar() {
       badge: 0,
     },
     {
+      href: "/facciones",
+      label: "Facciones",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M5 16V3h8l-2 3 2 3H5" />
+        </svg>
+      ),
+      badge: 0,
+    },
+    {
       href: "/mensajes",
       label: "Mensajes",
       icon: (

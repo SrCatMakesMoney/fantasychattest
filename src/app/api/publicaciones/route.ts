@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
+import "@/models/Faction";
 import { Post } from "@/models/Post";
 import { getSession } from "@/lib/auth";
 
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate("author", "username displayName avatar realm badges");
+      .populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
 
     return Response.json({ publicaciones: posts });
   } catch (error) {
@@ -53,10 +54,7 @@ export async function POST(request: NextRequest) {
 
     let populated;
     try {
-      populated = await Post.findById(post._id).populate(
-        "author",
-        "username displayName avatar realm badges"
-      );
+      populated = await Post.findById(post._id).populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
     } catch {
       populated = post;
     }

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
+import "@/models/Faction";
 import { User } from "@/models/User";
 import { Post } from "@/models/Post";
 import { getSession } from "@/lib/auth";
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
     const posts = await Post.find({ author: userId })
       .sort({ createdAt: -1 })
       .limit(20)
-      .populate("author", "username displayName avatar realm badges");
+      .populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
 
     const postCount = await Post.countDocuments({ author: userId });
 

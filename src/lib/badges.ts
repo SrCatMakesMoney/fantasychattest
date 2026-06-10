@@ -36,6 +36,18 @@ export const BADGES: Record<string, BadgeDef> = {
     icon: "⚜",
     description: "Asistió a un festín en el castillo",
   },
+  fundador: {
+    id: "fundador",
+    name: "Fundador de Facción",
+    icon: "⚑",
+    description: "Alzó su propio estandarte y fundó una facción",
+  },
+  conquistador: {
+    id: "conquistador",
+    name: "Conquistador",
+    icon: "⛨",
+    description: "Venció en una guerra de facciones",
+  },
   elegido: {
     id: "elegido",
     name: "Elegido de la Profecía",
