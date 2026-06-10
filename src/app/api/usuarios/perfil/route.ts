@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const posts = await Post.find({ author: userId })
       .sort({ createdAt: -1 })
       .limit(20)
-      .populate({ path: "author", select: "username displayName avatar realm badges faction", populate: { path: "faction", select: "name emblem" } });
+      .populate({ path: "author", select: "username displayName avatar realm badges faction cosmeticos", populate: { path: "faction", select: "name emblem" } });
 
     const postCount = await Post.countDocuments({ author: userId });
 
@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
         bio: user.bio,
         realm: user.realm,
         badges: user.badges || [],
+        cosmeticos: user.cosmeticos || { marco: "", titulo: "", colorNombre: "" },
         createdAt: user.createdAt,
       },
       publicaciones: posts,

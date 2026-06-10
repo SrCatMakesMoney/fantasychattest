@@ -12,6 +12,7 @@ interface PostAuthor {
   realm: string;
   badges?: string[];
   faction?: { _id: string; name: string; emblem: string } | null;
+  cosmeticos?: { marco?: string; titulo?: string; colorNombre?: string };
 }
 
 interface CommentData {
@@ -115,6 +116,7 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
   }, [post.createdAt]);
 
   const initial = post.author.displayName?.[0]?.toUpperCase() || "?";
+  const cos = post.author.cosmeticos;
 
   const eventLabel =
     post.eventType === "decreto"
@@ -146,10 +148,10 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
             <img
               src={post.author.avatar}
               alt={post.author.displayName}
-              className="w-11 h-11 rounded-full border-2 border-[var(--color-accent-gold)] object-cover shadow-[0_0_8px_rgba(232,184,48,0.3)]"
+              className={`w-11 h-11 rounded-full border-2 border-[var(--color-accent-gold)] object-cover shadow-[0_0_8px_rgba(232,184,48,0.3)] ${cos?.marco || ""}`}
             />
           ) : (
-            <div className="w-11 h-11 fantasy-avatar text-sm">
+            <div className={`w-11 h-11 fantasy-avatar text-sm ${cos?.marco || ""}`}>
               {initial}
             </div>
           )}
@@ -159,9 +161,15 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
             <button
               onClick={() => router.push(`/usuario?id=${post.author._id}`)}
               className="fantasy-title text-[var(--color-accent-gold)] text-sm hover:underline cursor-pointer"
+              style={cos?.colorNombre ? { color: cos.colorNombre } : undefined}
             >
               {post.author.displayName}
             </button>
+            {cos?.titulo && (
+              <span className="text-[var(--color-accent-purple)] text-xs italic">
+                {cos.titulo}
+              </span>
+            )}
             <button
               onClick={() => router.push(`/usuario?id=${post.author._id}`)}
               className="text-[var(--color-text-muted)] text-xs hover:text-[var(--color-text-secondary)] cursor-pointer"

@@ -434,6 +434,30 @@
     color: var(--color-text-muted);
   }
 
+  .marco-hierro {
+    border-color: #8a8a95 !important;
+    box-shadow: 0 0 10px rgba(160, 160, 175, 0.5) !important;
+  }
+
+  .marco-sangre {
+    border-color: #c03030 !important;
+    box-shadow: 0 0 12px rgba(208, 64, 64, 0.6) !important;
+  }
+
+  .marco-real {
+    border-color: var(--color-accent-gold) !important;
+    box-shadow:
+      0 0 14px rgba(232, 184, 48, 0.7),
+      0 0 30px rgba(232, 184, 48, 0.3) !important;
+  }
+
+  .marco-espectral {
+    border-color: #a060e0 !important;
+    box-shadow:
+      0 0 14px rgba(160, 96, 224, 0.7),
+      0 0 30px rgba(160, 96, 224, 0.3) !important;
+  }
+
   ::selection {
     background: rgba(144, 80, 208, 0.4);
     color: var(--color-accent-gold);
