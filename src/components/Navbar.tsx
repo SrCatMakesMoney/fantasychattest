@@ -114,23 +114,24 @@ export default function Navbar() {
 
   return (
     <nav className="castle-card border-b border-[var(--color-border-dark)] sticky top-0 z-50">
-      <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/muro" className="fantasy-title glow-text text-lg">
-          Fantasy X
+      <div className="max-w-4xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-1">
+        <Link href="/muro" className="fantasy-title glow-text text-base sm:text-lg flex-shrink-0 px-1">
+          <span className="hidden md:inline">Fantasy X</span>
+          <span className="md:hidden">FX</span>
         </Link>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto min-w-0 no-scrollbar">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex items-center gap-2 px-3 sm:px-4 py-2 text-sm transition-all fantasy-title tracking-wider ${
+              className={`relative flex items-center gap-2 flex-shrink-0 px-2.5 sm:px-3 md:px-4 py-2 text-sm transition-all fantasy-title tracking-wider ${
                 pathname === item.href
                   ? "text-[var(--color-accent-gold)] bg-[var(--color-bg-hover)] border-b-2 border-[var(--color-accent-gold)]"
                   : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[rgba(38,24,69,0.5)]"
               }`}
             >
-              <span className="sm:hidden relative">
+              <span className="md:hidden relative">
                 {item.icon}
                 {item.badge > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 bg-[var(--color-accent-red)] text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
@@ -138,9 +139,9 @@ export default function Navbar() {
                   </span>
                 )}
               </span>
-              <span className="hidden sm:inline">{item.label}</span>
+              <span className="hidden md:inline">{item.label}</span>
               {item.badge > 0 && (
-                <span className="hidden sm:flex bg-[var(--color-accent-red)] text-white text-[9px] w-5 h-5 items-center justify-center rounded-full font-bold">
+                <span className="hidden md:flex bg-[var(--color-accent-red)] text-white text-[9px] w-5 h-5 items-center justify-center rounded-full font-bold">
                   {item.badge > 9 ? "9+" : item.badge}
                 </span>
               )}
@@ -148,13 +149,13 @@ export default function Navbar() {
           ))}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1 px-2 sm:px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-accent-red)] transition-colors ml-1 text-sm"
+            className="flex items-center gap-1 flex-shrink-0 px-2 sm:px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-accent-red)] transition-colors ml-1 text-sm"
             title="Salir del reino"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="sm:hidden">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="md:hidden">
               <path d="M6 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3M11 11l3-3-3-3M6 8h8" />
             </svg>
-            <span className="hidden sm:inline">Salir</span>
+            <span className="hidden md:inline">Salir</span>
           </button>
         </div>
       </div>

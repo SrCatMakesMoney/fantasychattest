@@ -20,6 +20,31 @@ export function isCloudinaryConfigured(): boolean {
   return CLOUD_NAME.length > 0 && UPLOAD_PRESET.length > 0;
 }
 
+const MAX_INLINE_IMAGE_BYTES = 2 * 1024 * 1024;
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error("No se pudo leer el archivo"));
+    reader.readAsDataURL(file);
+  });
+}
+
+export async function uploadImage(file: File): Promise<UploadResult> {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Solo se permiten imagenes o GIF");
+  }
+  if (isCloudinaryConfigured()) {
+    return uploadMedia(file);
+  }
+  if (file.size > MAX_INLINE_IMAGE_BYTES) {
+    throw new Error("La imagen debe pesar menos de 2 MB");
+  }
+  const url = await fileToDataUrl(file);
+  return { url, type: "image", format: file.type.split("/")[1] || "" };
+}
+
 export async function uploadMedia(file: File): Promise<UploadResult> {
   if (!CLOUD_NAME || !UPLOAD_PRESET) {
     throw new Error("Cloudinary no esta configurado");
