@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fantasychat.vercel.app";
 
@@ -41,6 +42,15 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Fantasy X",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0f0a1a",
 };
 
 export default function RootLayout({
@@ -56,7 +66,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen castle-bg antialiased">{children}</body>
+      <body className="min-h-screen castle-bg antialiased">
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
   );
 }
