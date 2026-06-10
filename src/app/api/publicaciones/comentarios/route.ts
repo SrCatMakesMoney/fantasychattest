@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const comments = await Comment.find({ post: postId })
       .sort({ createdAt: 1 })
       .limit(50)
-      .populate("author", "username displayName avatar realm");
+      .populate("author", "username displayName avatar realm badges");
 
     return Response.json({ comentarios: comments });
   } catch (error) {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     try {
       populated = await Comment.findById(comment._id).populate(
         "author",
-        "username displayName avatar realm"
+        "username displayName avatar realm badges"
       );
     } catch {
       populated = comment;

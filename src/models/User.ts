@@ -8,6 +8,7 @@ export interface IUser extends Document {
   banner: string;
   bio: string;
   realm: string;
+  badges: string[];
   createdAt: Date;
 }
 
@@ -20,6 +21,7 @@ const UserSchema = new Schema<IUser>(
     banner: { type: String, default: "" },
     bio: { type: String, default: "Un viajero de los reinos oscuros..." },
     realm: { type: String, default: "Fortaleza de Sombras" },
+    badges: { type: [String], default: [] },
   },
   { timestamps: true, autoIndex: true }
 );

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate("author", "username displayName avatar realm");
+      .populate("author", "username displayName avatar realm badges");
 
     return Response.json({ publicaciones: posts });
   } catch (error) {
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     try {
       populated = await Post.findById(post._id).populate(
         "author",
-        "username displayName avatar realm"
+        "username displayName avatar realm badges"
       );
     } catch {
       populated = post;

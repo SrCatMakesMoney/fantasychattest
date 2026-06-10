@@ -6,6 +6,7 @@ export interface IPost extends Document {
   mediaUrl: string;
   mediaType: "image" | "video" | "audio" | "";
   likes: mongoose.Types.ObjectId[];
+  eventType: "" | "evento" | "decreto" | "coronacion";
   createdAt: Date;
 }
 
@@ -16,6 +17,11 @@ const PostSchema = new Schema<IPost>(
     mediaUrl: { type: String, default: "" },
     mediaType: { type: String, enum: ["image", "video", "audio", ""], default: "" },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    eventType: {
+      type: String,
+      enum: ["", "evento", "decreto", "coronacion"],
+      default: "",
+    },
   },
   { timestamps: true }
 );

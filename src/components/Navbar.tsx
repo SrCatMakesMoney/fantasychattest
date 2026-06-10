@@ -48,6 +48,16 @@ export default function Navbar() {
       badge: 0,
     },
     {
+      href: "/reino",
+      label: "Reino",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M2 14h14M3 14V7l3 2 3-5 3 5 3-2v7" />
+        </svg>
+      ),
+      badge: 0,
+    },
+    {
       href: "/mensajes",
       label: "Mensajes",
       icon: (
