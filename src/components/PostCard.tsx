@@ -117,11 +117,11 @@ export default function PostCard({ post, currentUserId, onMessageUser }: PostCar
 
   const eventLabel =
     post.eventType === "decreto"
-      ? "\ud83d\udcdc Decreto Real"
+      ? "⚜ Decreto Real"
       : post.eventType === "coronacion"
-      ? "\ud83d\udc51 Coronaci\u00f3n"
+      ? "♛ Coronación"
       : post.eventType === "evento"
-      ? "\u2694 Evento del Reino"
+      ? "⚔ Suceso del Reino"
       : null;
 
   return (

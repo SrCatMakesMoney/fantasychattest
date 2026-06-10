@@ -9,37 +9,37 @@ export const BADGES: Record<string, BadgeDef> = {
   rey: {
     id: "rey",
     name: "Rey del Reino",
-    icon: "👑",
+    icon: "♛",
     description: "Coronado soberano de las tierras oscuras",
   },
   ex_rey: {
     id: "ex_rey",
     name: "Antiguo Rey",
-    icon: "🏛",
+    icon: "♜",
     description: "Una vez ocupó el trono del reino",
   },
   superviviente: {
     id: "superviviente",
     name: "Superviviente de Plaga",
-    icon: "🩸",
+    icon: "☠",
     description: "Sobrevivió a una plaga que asoló el reino",
   },
   veterano: {
     id: "veterano",
     name: "Veterano de Batalla",
-    icon: "🗡",
+    icon: "⚔",
     description: "Luchó en una batalla legendaria",
   },
   invitado_real: {
     id: "invitado_real",
     name: "Invitado Real",
-    icon: "🍷",
+    icon: "⚜",
     description: "Asistió a un festín en el castillo",
   },
   elegido: {
     id: "elegido",
     name: "Elegido de la Profecía",
-    icon: "🔮",
+    icon: "☽",
     description: "Su nombre fue susurrado por los oráculos",
   },
 };
