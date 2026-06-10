@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { uploadMedia, isCloudinaryConfigured } from "@/lib/cloudinary";
+import { uploadImage } from "@/lib/cloudinary";
 import { getBadge } from "@/lib/badges";
 import { levelProgress, titleForLevel, UserStats } from "@/lib/nivel";
 
@@ -48,8 +48,6 @@ export default function PerfilPage() {
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
-  const cloudinaryReady = isCloudinaryConfigured();
-
   useEffect(() => {
     const fetchUser = async () => {
       const res = await fetch("/api/auth/me");
@@ -89,7 +87,7 @@ export default function PerfilPage() {
     });
     if (res.ok) {
       const data = await res.json();
-      setUser(data.user);
+      setUser((u) => ({ ...data.user, cosmeticos: u?.cosmeticos }));
       return true;
     }
     return false;
@@ -125,11 +123,11 @@ export default function PerfilPage() {
     if (!file) return;
     setUploadingAvatar(true);
     try {
-      const result = await uploadMedia(file);
+      const result = await uploadImage(file);
       await updateProfile({ avatar: result.url });
-    } catch {
-      setSaveMsg("Error al subir imagen");
-      setTimeout(() => setSaveMsg(""), 3000);
+    } catch (err) {
+      setSaveMsg(err instanceof Error ? err.message : "Error al subir imagen");
+      setTimeout(() => setSaveMsg(""), 4000);
     } finally {
       setUploadingAvatar(false);
     }
@@ -140,11 +138,11 @@ export default function PerfilPage() {
     if (!file) return;
     setUploadingBanner(true);
     try {
-      const result = await uploadMedia(file);
+      const result = await uploadImage(file);
       await updateProfile({ banner: result.url });
-    } catch {
-      setSaveMsg("Error al subir banner");
-      setTimeout(() => setSaveMsg(""), 3000);
+    } catch (err) {
+      setSaveMsg(err instanceof Error ? err.message : "Error al subir banner");
+      setTimeout(() => setSaveMsg(""), 4000);
     } finally {
       setUploadingBanner(false);
     }
@@ -192,8 +190,7 @@ export default function PerfilPage() {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-card)] to-transparent" />
 
-            {cloudinaryReady && (
-              <>
+            <>
                 <input
                   ref={bannerInputRef}
                   type="file"
@@ -209,7 +206,6 @@ export default function PerfilPage() {
                   {uploadingBanner ? "Subiendo..." : "Cambiar banner"}
                 </button>
               </>
-            )}
           </div>
 
           {/* Avatar + Info */}
@@ -231,8 +227,7 @@ export default function PerfilPage() {
                 <div className="level-badge" title={`Nivel ${progreso.level}`}>
                   <span>{progreso.level}</span>
                 </div>
-                {cloudinaryReady && (
-                  <>
+                <>
                     <input
                       ref={avatarInputRef}
                       type="file"
@@ -255,7 +250,6 @@ export default function PerfilPage() {
                       )}
                     </button>
                   </>
-                )}
               </div>
               <div className="flex-1 min-w-0">
                 {editing ? (

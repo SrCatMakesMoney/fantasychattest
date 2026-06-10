@@ -458,6 +458,15 @@
       0 0 30px rgba(160, 96, 224, 0.3) !important;
   }
 
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   ::selection {
     background: rgba(144, 80, 208, 0.4);
     color: var(--color-accent-gold);
