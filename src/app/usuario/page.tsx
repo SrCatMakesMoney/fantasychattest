@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import PostCard from "@/components/PostCard";
 import { getBadge } from "@/lib/badges";
+import { levelProgress, titleForLevel, UserStats } from "@/lib/nivel";
 
 interface UserProfile {
   id: string;
@@ -43,6 +44,8 @@ function UsuarioContent() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [xp, setXp] = useState(0);
   const [currentUserId, setCurrentUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -75,6 +78,8 @@ function UsuarioContent() {
         setProfile(data.usuario);
         setPosts(data.publicaciones);
         setTotalPosts(data.totalPublicaciones);
+        setStats(data.stats || null);
+        setXp(data.xp || 0);
       } catch {
         setError("Error de conexion");
       } finally {
@@ -116,12 +121,17 @@ function UsuarioContent() {
   }
 
   const initial = profile.displayName?.[0]?.toUpperCase() || "?";
+  const progreso = levelProgress(xp);
 
   return (
     <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-6">
-        <div className="castle-card fade-in overflow-hidden">
+        <div className="castle-card rpg-panel fade-in overflow-hidden">
+          <span className="rpg-corner rpg-corner-tl" />
+          <span className="rpg-corner rpg-corner-tr" />
+          <span className="rpg-corner rpg-corner-bl" />
+          <span className="rpg-corner rpg-corner-br" />
           {/* Banner */}
           <div className="relative h-36 sm:h-48 bg-gradient-to-br from-[#1a1030] via-[#2a1845] to-[#0f0a1a] overflow-hidden">
             {profile.banner ? (
@@ -144,24 +154,32 @@ function UsuarioContent() {
           {/* Info */}
           <div className="px-6 sm:px-8 pb-8 -mt-10 relative z-10">
             <div className="flex items-end gap-4 mb-5">
-              {profile.avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={profile.avatar}
-                  alt={profile.displayName}
-                  className="w-20 h-20 rounded-full border-4 border-[var(--color-bg-card)] object-cover shadow-lg"
-                />
-              ) : (
-                <div className="w-20 h-20 fantasy-avatar text-xl border-4 border-[var(--color-bg-card)] shadow-lg">
-                  {initial}
+              <div className="relative">
+                {profile.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={profile.avatar}
+                    alt={profile.displayName}
+                    className="w-20 h-20 rounded-full border-4 border-[var(--color-bg-card)] object-cover shadow-lg"
+                  />
+                ) : (
+                  <div className="w-20 h-20 fantasy-avatar text-xl border-4 border-[var(--color-bg-card)] shadow-lg">
+                    {initial}
+                  </div>
+                )}
+                <div className="level-badge" title={`Nivel ${progreso.level}`}>
+                  <span>{progreso.level}</span>
                 </div>
-              )}
+              </div>
               <div className="flex-1 min-w-0">
                 <h1 className="fantasy-title glow-text text-xl truncate">
                   {profile.displayName}
                 </h1>
                 <p className="text-[var(--color-text-muted)] text-sm">
-                  @{profile.username}
+                  @{profile.username} ·{" "}
+                  <span className="text-[var(--color-accent-purple)]">
+                    {titleForLevel(progreso.level)}
+                  </span>
                 </p>
               </div>
               <button
@@ -200,9 +218,43 @@ function UsuarioContent() {
               </p>
             )}
 
-            <div className="flex items-center gap-4 mt-4 text-sm text-[var(--color-text-muted)]">
-              <span>{totalPosts} publicacion{totalPosts !== 1 ? "es" : ""}</span>
+            <div className="mt-5">
+              <div className="flex items-center justify-between mb-1">
+                <span className="fantasy-title text-[var(--color-accent-gold)] text-[10px] tracking-widest uppercase">
+                  Nivel {progreso.level}
+                </span>
+                <span className="text-[var(--color-text-muted)] text-xs">
+                  {progreso.current} / {progreso.needed} XP
+                </span>
+              </div>
+              <div className="rpg-bar">
+                <div
+                  className="rpg-bar-fill"
+                  style={{ width: `${progreso.percent}%` }}
+                />
+              </div>
             </div>
+
+            {stats && (
+              <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{totalPosts}</span>
+                  <span className="rpg-stat-label">Proclamas</span>
+                </div>
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{stats.likesReceived}</span>
+                  <span className="rpg-stat-label">Tributos</span>
+                </div>
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{stats.comments}</span>
+                  <span className="rpg-stat-label">Ecos</span>
+                </div>
+                <div className="rpg-stat">
+                  <span className="rpg-stat-value">{(profile.badges || []).length}</span>
+                  <span className="rpg-stat-label">Insignias</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

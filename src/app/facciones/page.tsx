@@ -249,13 +249,18 @@ export default function FaccionesPage() {
         ) : (
           facciones.map((f) => {
             const esMia = f._id === miFaccion;
+            const maxInf = Math.max(...facciones.map((x) => x.influence), 1);
             return (
               <div
                 key={f._id}
-                className={`castle-card p-5 mb-4 fade-in ${
+                className={`castle-card rpg-panel p-5 mb-4 fade-in ${
                   esMia ? "border-[var(--color-accent-gold)]" : ""
                 }`}
               >
+                <span className="rpg-corner rpg-corner-tl" />
+                <span className="rpg-corner rpg-corner-tr" />
+                <span className="rpg-corner rpg-corner-bl" />
+                <span className="rpg-corner rpg-corner-br" />
                 <div className="flex items-start justify-between flex-wrap gap-3">
                   <div className="min-w-0">
                     <p className="fantasy-title text-[var(--color-accent-gold)] text-base">
@@ -283,6 +288,15 @@ export default function FaccionesPage() {
                     <p className="text-[var(--color-text-muted)] text-[10px] tracking-widest uppercase">
                       Influencia
                     </p>
+                  </div>
+                </div>
+
+                <div className="mt-3">
+                  <div className="rpg-bar">
+                    <div
+                      className="rpg-bar-fill rpg-bar-fill-purple"
+                      style={{ width: `${Math.round((f.influence / maxInf) * 100)}%` }}
+                    />
                   </div>
                 </div>
 
